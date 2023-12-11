@@ -1,0 +1,16 @@
+---
+title: "Gaussian Mixture Models and Expectation-Maximization"
+author: "Abraham Porschet"
+date: "2023-12-10"
+categories: [code, analysis]
+image: "image.png"
+---
+
+# Expectation Maximization
+
+The *Expectation Maximization (E-M) Algorithm* is an iterative approach to find maximum likelihood estimates for latent variables. It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.
+
+The unknown parameters are generally written as $\phi$ or $\Theta$, and we can call the latent, "nuisance," variables $J$, and the observed data $U$. So, from above, the process can be seen as 
+$$ \Theta^* = \operatorname*{argmax}_{\Theta} \sum_{J\in\mathcal{J}^n} P(\Theta, J|U) $$ 
+Since this shows us maximizing the posterior probability of parameters $\Theta$ given our data and we are summing over $J$ in order to marginalize out our latent variables.
+

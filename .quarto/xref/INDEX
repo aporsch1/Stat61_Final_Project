@@ -1,0 +1,17 @@
+{
+  "posts/post-with-code/index.qmd": {
+    "index.html": "e939edd5"
+  },
+  "posts/welcome/index.qmd": {
+    "index.html": "f29c7dec"
+  },
+  "index.qmd": {
+    "index.html": "740875a1"
+  },
+  "about.qmd": {
+    "about.html": "a476e231"
+  },
+  "posts/Stat-61-Final-Project/Stat-61-Final-Project.qmd": {
+    "Stat-61-Final-Project.html": "fbd2825d"
+  }
+}

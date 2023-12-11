@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "nba_stats",
+    "section": "",
+    "text": "Post With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nDec 10, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nGaussian Mixture Models and Expectation-Maximization\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nDec 10, 2023\n\n\nAbraham Porschet\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nDec 7, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/Stat-61-Final-Project/Stat-61-Final-Project.html",
+    "href": "posts/Stat-61-Final-Project/Stat-61-Final-Project.html",
+    "title": "Gaussian Mixture Models and Expectation-Maximization",
+    "section": "",
+    "text": "Expectation Maximization\nThe Expectation Maximization (E-M) Algorithm is an iterative approach to find maximum likelihood estimates for latent variables. It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.\nThe unknown parameters are generally written as \\(\\phi\\) or \\(\\Theta\\), and we can call the latent, “nuisance,” variables \\(J\\), and the observed data \\(U\\). So, from above, the process can be seen as \\[ \\Theta^* = \\operatorname*{argmax}_{\\Theta} \\sum_{J\\in\\mathcal{J}^n} P(\\Theta, J|U) \\] Since this shows us maximizing the posterior probability of parameters \\(\\Theta\\) given our data and we are summing over \\(J\\) in order to marginalize out our latent variables."
+  }
+]
