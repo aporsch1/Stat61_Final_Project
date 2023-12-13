@@ -95,6 +95,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -207,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> random</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib3 <span class="im">as</span> urllib</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.</p>
@@ -224,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now I’m going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
 <div class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="48">
+<div class="cell-output cell-output-display" data-execution_count="21">
 <pre><code>{'covariance_type': 'full',
  'init_params': 'kmeans',
  'max_iter': 100,
@@ -278,6 +281,216 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Basketball as a sport is changing. Players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position, and some teams are playing with centers who are shorter than 6’5. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players such as Kevin Durant and Kristaps Porzingis, and continued by younger players like Chet Holmgren and Victor Wembanyama.</p>
 <p>People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don’t seem to suffice, which means that we want to find new labels for positions in order to regroup players.</p>
 <p>This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e.&nbsp;if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>year <span class="op">=</span> <span class="dv">2022</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>html <span class="op">=</span> urlopen(url)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>org_html <span class="op">=</span> BeautifulSoup(html)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>) <span class="co">#this should get me the columns from the website.</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> [th.getText() <span class="cf">for</span> th <span class="kw">in</span> org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>)[<span class="dv">0</span>].findAll(<span class="st">'th'</span>)]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> headers[<span class="dv">1</span>:]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>headers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>['Player',
+ 'Pos',
+ 'Age',
+ 'Tm',
+ 'G',
+ 'GS',
+ 'MP',
+ 'FG',
+ 'FGA',
+ 'FG%',
+ '3P',
+ '3PA',
+ '3P%',
+ '2P',
+ '2PA',
+ '2P%',
+ 'eFG%',
+ 'FT',
+ 'FTA',
+ 'FT%',
+ 'ORB',
+ 'DRB',
+ 'TRB',
+ 'AST',
+ 'STL',
+ 'BLK',
+ 'TOV',
+ 'PF',
+ 'PTS']</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now we want to turn this mess of text we ripped from html into a dataframe (thumbs up emoji)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> org_html.findAll(<span class="st">'tr'</span>)[<span class="dv">1</span>:]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>player_stats <span class="op">=</span> [[td.getText() <span class="cf">for</span> td <span class="kw">in</span> rows[i].findAll(<span class="st">'td'</span>)]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(rows))]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(player_stats, columns <span class="op">=</span> headers)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>data.head() <span class="co">#YAYYYYY</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Player</th>
+<th data-quarto-table-cell-role="th">Pos</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">Tm</th>
+<th data-quarto-table-cell-role="th">G</th>
+<th data-quarto-table-cell-role="th">GS</th>
+<th data-quarto-table-cell-role="th">MP</th>
+<th data-quarto-table-cell-role="th">FG</th>
+<th data-quarto-table-cell-role="th">FGA</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">ORB</th>
+<th data-quarto-table-cell-role="th">DRB</th>
+<th data-quarto-table-cell-role="th">TRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">TOV</th>
+<th data-quarto-table-cell-role="th">PF</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Precious Achiuwa</td>
+<td>C</td>
+<td>22</td>
+<td>TOR</td>
+<td>73</td>
+<td>28</td>
+<td>23.6</td>
+<td>3.6</td>
+<td>8.3</td>
+<td>.439</td>
+<td>...</td>
+<td>.595</td>
+<td>2.0</td>
+<td>4.5</td>
+<td>6.5</td>
+<td>1.1</td>
+<td>0.5</td>
+<td>0.6</td>
+<td>1.2</td>
+<td>2.1</td>
+<td>9.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Steven Adams</td>
+<td>C</td>
+<td>28</td>
+<td>MEM</td>
+<td>76</td>
+<td>75</td>
+<td>26.3</td>
+<td>2.8</td>
+<td>5.1</td>
+<td>.547</td>
+<td>...</td>
+<td>.543</td>
+<td>4.6</td>
+<td>5.4</td>
+<td>10.0</td>
+<td>3.4</td>
+<td>0.9</td>
+<td>0.8</td>
+<td>1.5</td>
+<td>2.0</td>
+<td>6.9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Bam Adebayo</td>
+<td>C</td>
+<td>24</td>
+<td>MIA</td>
+<td>56</td>
+<td>56</td>
+<td>32.6</td>
+<td>7.3</td>
+<td>13.0</td>
+<td>.557</td>
+<td>...</td>
+<td>.753</td>
+<td>2.4</td>
+<td>7.6</td>
+<td>10.1</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.8</td>
+<td>2.6</td>
+<td>3.1</td>
+<td>19.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Santi Aldama</td>
+<td>PF</td>
+<td>21</td>
+<td>MEM</td>
+<td>32</td>
+<td>0</td>
+<td>11.3</td>
+<td>1.7</td>
+<td>4.1</td>
+<td>.402</td>
+<td>...</td>
+<td>.625</td>
+<td>1.0</td>
+<td>1.7</td>
+<td>2.7</td>
+<td>0.7</td>
+<td>0.2</td>
+<td>0.3</td>
+<td>0.5</td>
+<td>1.1</td>
+<td>4.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LaMarcus Aldridge</td>
+<td>C</td>
+<td>36</td>
+<td>BRK</td>
+<td>47</td>
+<td>12</td>
+<td>22.3</td>
+<td>5.4</td>
+<td>9.7</td>
+<td>.550</td>
+<td>...</td>
+<td>.873</td>
+<td>1.6</td>
+<td>3.9</td>
+<td>5.5</td>
+<td>0.9</td>
+<td>0.3</td>
+<td>1.0</td>
+<td>0.9</td>
+<td>1.7</td>
+<td>12.9</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 29 columns</p>
+</div>
+</div>
+</div>
 
 
 </section>
