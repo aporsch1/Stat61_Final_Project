@@ -57,6 +57,7 @@ plt.show()
 Now I'm going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.
 
 ```{python}
+#| echo: false
 gm = GaussianMixture(n_components=5).fit(x)
 
 gm.get_params() 
@@ -80,6 +81,15 @@ gm.get_params()
 This code here fits the model and lets it learn from the data, in the next plot, I will plot the centers that the data came up with, and then on the plot after that I will plot the boundaries for the clusters that the algorithm came up with.
 
 ```{python}
+centers = gm.means_
+plt.figure(figsize=(8, 6))
+plt.scatter(x[:,0], x[:,1], label="data")
+plt.scatter(centers[:,0], centers[:,1],c='r', label="centers")
+plt.legend()
+plt.show() 
+
+```
+```{python}
 pred = gm.predict(x)
 
 df = pd.DataFrame({'x':x[:,0], 'y':x[:,1], 'label':pred})
@@ -92,3 +102,7 @@ for name, group in groups:
 ax.legend()
 plt.show() 
 ```
+
+The accuracy is really fantastic. It plots the centers exactly where I would have, and then is able to pick which dots it belongs to which groups with great accuracy. 
+
+Now if we consider a dataset with millions of points and possibly hundreds or thousands of dimensions, this allows for very sensitive anomaly detection for genetic disorders by clustering genes or proteins it helps us see just how helpful this could be.
