@@ -56,3 +56,39 @@ plt.show()
 
 Now I'm going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.
 
+```{python}
+gm = GaussianMixture(n_components=5).fit(x)
+
+gm.get_params() 
+
+{'covariance_type': 'full',
+ 'init_params': 'kmeans',
+ 'max_iter': 100,
+ 'means_init': None,
+ 'n_components': 5,
+ 'n_init': 1,
+ 'precisions_init': None,
+ 'random_state': None,
+ 'reg_covar': 1e-06,
+ 'tol': 0.001,
+ 'verbose': 0,
+ 'verbose_interval': 10,
+ 'warm_start': False,
+ 'weights_init': None} 
+```
+
+This code here fits the model and lets it learn from the data, in the next plot, I will plot the centers that the data came up with, and then on the plot after that I will plot the boundaries for the clusters that the algorithm came up with.
+
+```{r}
+pred = gm.predict(x)
+
+df = DataFrame({'x':x[:,0], 'y':x[:,1], 'label':pred})
+groups = df.groupby('label')
+
+ig, ax = plt.subplots()
+for name, group in groups:
+    ax.scatter(group.x, group.y, label=name)
+
+ax.legend()
+plt.show() 
+```
