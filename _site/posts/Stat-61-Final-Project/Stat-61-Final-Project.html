@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now I’m going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
 <div class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>{'covariance_type': 'full',
  'init_params': 'kmeans',
  'max_iter': 100,
@@ -269,6 +269,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The accuracy is really fantastic. It plots the centers exactly where I would have, and then is able to pick which dots it belongs to which groups with great accuracy.</p>
 <p>Now if we consider a dataset with millions of points and possibly hundreds or thousands of dimensions, this allows for very sensitive anomaly detection for genetic disorders by clustering genes or proteins it helps us see just how helpful this could be.</p>
+</section>
+<section id="the-nba" class="level2">
+<h2 class="anchored" data-anchor-id="the-nba">The NBA</h2>
+<p>Basketball as a sport is changing, players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players like Kevin Durant and Kristaps Porzingis, and continued by younger guys like Chet Holmgren and Victor Wembanyama.</p>
+<p>People are playing basketball differently and that calls for different positions. The old labels of point guard, shooting guard, center, power forward, and small forward don’t seem to apply as well anymore.</p>
+<p>This seems to be a problem uniquely well suited to clustering.</p>
 
 
 </section>

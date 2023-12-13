@@ -106,3 +106,11 @@ plt.show()
 The accuracy is really fantastic. It plots the centers exactly where I would have, and then is able to pick which dots it belongs to which groups with great accuracy. 
 
 Now if we consider a dataset with millions of points and possibly hundreds or thousands of dimensions, this allows for very sensitive anomaly detection for genetic disorders by clustering genes or proteins it helps us see just how helpful this could be.
+
+## The NBA
+
+Basketball as a sport is changing, players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players like Kevin Durant and Kristaps Porzingis, and continued by younger guys like Chet Holmgren and Victor Wembanyama.
+
+People are playing basketball differently and that calls for different positions. The old labels of point guard, shooting guard, center, power forward, and small forward don't seem to apply as well anymore.
+
+This seems to be a problem uniquely well suited to clustering.
