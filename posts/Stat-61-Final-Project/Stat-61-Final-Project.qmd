@@ -79,10 +79,10 @@ gm.get_params()
 
 This code here fits the model and lets it learn from the data, in the next plot, I will plot the centers that the data came up with, and then on the plot after that I will plot the boundaries for the clusters that the algorithm came up with.
 
-```{r}
+```{python}
 pred = gm.predict(x)
 
-df = DataFrame({'x':x[:,0], 'y':x[:,1], 'label':pred})
+df = pd.DataFrame({'x':x[:,0], 'y':x[:,1], 'label':pred})
 groups = df.groupby('label')
 
 ig, ax = plt.subplots()
