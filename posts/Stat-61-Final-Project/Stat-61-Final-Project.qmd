@@ -41,6 +41,9 @@ from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt 
 import pandas as pd 
 from numpy import random
+import urllib3 as urllib
+from bs4 import BeautifulSoup
+
 ```
 
 To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
@@ -109,8 +112,10 @@ Now if we consider a dataset with millions of points and possibly hundreds or th
 
 ## The NBA
 
-Basketball as a sport is changing, players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players like Kevin Durant and Kristaps Porzingis, and continued by younger guys like Chet Holmgren and Victor Wembanyama.
+![](nbaPic.jpeg){width="50%"}
 
-People are playing basketball differently and that calls for different positions. The old labels of point guard, shooting guard, center, power forward, and small forward don't seem to apply as well anymore.
+Basketball as a sport is changing. Players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position, and some teams are playing with centers who are shorter than 6'5. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players such as Kevin Durant and Kristaps Porzingis, and continued by younger players like Chet Holmgren and Victor Wembanyama.
 
-This seems to be a problem uniquely well suited to clustering.
+People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don't seem to suffice, which means that we want to find new labels for positions in order to regroup players.
+
+This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e. if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.
