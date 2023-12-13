@@ -38,9 +38,21 @@ GMMs are used to observe clusters everywhere. They are used to create customer a
 #importing necessary packages
 from sklearn.mixture import GaussianMixture
 from sklearn.datasets import make_blobs
-import matplotlib as plt 
+import matplotlib.pyplot as plt 
 import pandas as pd 
-import numpy as np
+from numpy import random
 ```
 
 To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
+
+```{python}
+#set a random seed so that we actually get clusters that kind of look like separate clusters
+random.seed(195)
+x, _ = make_blobs(n_samples=450, centers=5, cluster_std=1.84)
+plt.figure(figsize=(8, 6))
+plt.scatter(x[:,0], x[:,1])
+plt.show() 
+```
+
+Now I'm going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.
+
