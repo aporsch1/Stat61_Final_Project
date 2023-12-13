@@ -8,7 +8,7 @@ image: "image.png"
 
 # Expectation Maximization
 
-The *Expectation Maximization (E-M) Algorithm* is an iterative approach to find maximum likelihood estimates for latent variables. It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.
+The *Expectation Maximization (E-M) Algorithm* is an iterative approach to find maximum likelihood estimates for latent variables (since the things we want to maximize are only indirectly available). It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.
 
 The unknown parameters are sometimes written as $\phi$ or $\Theta$, and we can call the latent, "nuisance," variables $J$, and the observed data $U$. So, from above, the process can be roughly seen as 
 $$ \Theta^* = \operatorname*{argmax}_{\Theta} \sum_{J\in\mathcal{J}^n} P(\Theta, J|U) $$ 
@@ -34,6 +34,13 @@ One of the most common usages of expectation maximization, and specifically clus
 GMMs are used to observe clusters everywhere. They are used to create customer archetypes in retail, to better understand the different ways people shop, they are used in medical scenarios in order to identify types of tumors for cancer detection. From this little sample of use cases, it is pretty obvious that this is a really powerful (and pretty cool) use for a powerful algorithm.
 
 ## Example Code
+```{python}
+#importing necessary packages
+from sklearn.mixture import GaussianMixture
+from sklearn.datasets import make_blobs
+import matplotlib as plt 
+import pandas as pd 
+import numpy as np
+```
 
-
-
+To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
