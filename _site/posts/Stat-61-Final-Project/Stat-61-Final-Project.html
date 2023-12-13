@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now I’m going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
 <div class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="56">
 <pre><code>{'covariance_type': 'full',
  'init_params': 'kmeans',
  'max_iter': 100,
@@ -286,13 +286,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>html <span class="op">=</span> urlopen(url)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>org_html <span class="op">=</span> BeautifulSoup(html)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :) the api was nba_api on PyPI</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>) <span class="co">#this should get me the columns from the website.</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> [th.getText() <span class="cf">for</span> th <span class="kw">in</span> org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>)[<span class="dv">0</span>].findAll(<span class="st">'th'</span>)]</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> headers[<span class="dv">1</span>:]</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>headers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
+<div class="cell-output cell-output-display" data-execution_count="59">
 <pre><code>['Player',
  'Pos',
  'Age',
@@ -331,8 +331,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>player_stats <span class="op">=</span> [[td.getText() <span class="cf">for</span> td <span class="kw">in</span> rows[i].findAll(<span class="st">'td'</span>)]</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(rows))]</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(player_stats, columns <span class="op">=</span> headers)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>data.head() <span class="co">#YAYYYYY</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>data.head() <span class="co">#YAYYYYY</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>data.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
 <div>
 
 
@@ -365,124 +366,124 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Precious Achiuwa</td>
-<td>C</td>
-<td>22</td>
+<td data-quarto-table-cell-role="th">837</td>
+<td>Thaddeus Young</td>
+<td>PF</td>
+<td>33</td>
 <td>TOR</td>
-<td>73</td>
-<td>28</td>
-<td>23.6</td>
-<td>3.6</td>
-<td>8.3</td>
-<td>.439</td>
+<td>26</td>
+<td>0</td>
+<td>18.3</td>
+<td>2.6</td>
+<td>5.5</td>
+<td>.465</td>
 <td>...</td>
-<td>.595</td>
-<td>2.0</td>
-<td>4.5</td>
-<td>6.5</td>
-<td>1.1</td>
-<td>0.5</td>
-<td>0.6</td>
+<td>.481</td>
+<td>1.5</td>
+<td>2.9</td>
+<td>4.4</td>
+<td>1.7</td>
 <td>1.2</td>
-<td>2.1</td>
-<td>9.1</td>
+<td>0.4</td>
+<td>0.8</td>
+<td>1.7</td>
+<td>6.3</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Steven Adams</td>
-<td>C</td>
-<td>28</td>
-<td>MEM</td>
+<td data-quarto-table-cell-role="th">838</td>
+<td>Trae Young</td>
+<td>PG</td>
+<td>23</td>
+<td>ATL</td>
 <td>76</td>
-<td>75</td>
-<td>26.3</td>
-<td>2.8</td>
-<td>5.1</td>
-<td>.547</td>
+<td>76</td>
+<td>34.9</td>
+<td>9.4</td>
+<td>20.3</td>
+<td>.460</td>
 <td>...</td>
-<td>.543</td>
-<td>4.6</td>
-<td>5.4</td>
-<td>10.0</td>
-<td>3.4</td>
+<td>.904</td>
+<td>0.7</td>
+<td>3.1</td>
+<td>3.7</td>
+<td>9.7</td>
 <td>0.9</td>
-<td>0.8</td>
-<td>1.5</td>
-<td>2.0</td>
-<td>6.9</td>
+<td>0.1</td>
+<td>4.0</td>
+<td>1.7</td>
+<td>28.4</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Bam Adebayo</td>
+<td data-quarto-table-cell-role="th">839</td>
+<td>Omer Yurtseven</td>
 <td>C</td>
-<td>24</td>
+<td>23</td>
 <td>MIA</td>
 <td>56</td>
-<td>56</td>
-<td>32.6</td>
-<td>7.3</td>
-<td>13.0</td>
-<td>.557</td>
+<td>12</td>
+<td>12.6</td>
+<td>2.3</td>
+<td>4.4</td>
+<td>.526</td>
 <td>...</td>
-<td>.753</td>
-<td>2.4</td>
-<td>7.6</td>
-<td>10.1</td>
-<td>3.4</td>
-<td>1.4</td>
-<td>0.8</td>
-<td>2.6</td>
-<td>3.1</td>
-<td>19.1</td>
+<td>.623</td>
+<td>1.5</td>
+<td>3.7</td>
+<td>5.3</td>
+<td>0.9</td>
+<td>0.3</td>
+<td>0.4</td>
+<td>0.7</td>
+<td>1.5</td>
+<td>5.3</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Santi Aldama</td>
-<td>PF</td>
-<td>21</td>
-<td>MEM</td>
-<td>32</td>
+<td data-quarto-table-cell-role="th">840</td>
+<td>Cody Zeller</td>
+<td>C</td>
+<td>29</td>
+<td>POR</td>
+<td>27</td>
 <td>0</td>
-<td>11.3</td>
-<td>1.7</td>
-<td>4.1</td>
-<td>.402</td>
+<td>13.1</td>
+<td>1.9</td>
+<td>3.3</td>
+<td>.567</td>
 <td>...</td>
-<td>.625</td>
-<td>1.0</td>
-<td>1.7</td>
-<td>2.7</td>
-<td>0.7</td>
-<td>0.2</td>
+<td>.776</td>
+<td>1.9</td>
+<td>2.8</td>
+<td>4.6</td>
+<td>0.8</td>
 <td>0.3</td>
-<td>0.5</td>
-<td>1.1</td>
-<td>4.1</td>
+<td>0.2</td>
+<td>0.7</td>
+<td>2.1</td>
+<td>5.2</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>LaMarcus Aldridge</td>
+<td data-quarto-table-cell-role="th">841</td>
+<td>Ivica Zubac</td>
 <td>C</td>
-<td>36</td>
-<td>BRK</td>
-<td>47</td>
-<td>12</td>
-<td>22.3</td>
-<td>5.4</td>
-<td>9.7</td>
-<td>.550</td>
+<td>24</td>
+<td>LAC</td>
+<td>76</td>
+<td>76</td>
+<td>24.4</td>
+<td>4.1</td>
+<td>6.5</td>
+<td>.626</td>
 <td>...</td>
-<td>.873</td>
+<td>.727</td>
+<td>2.9</td>
+<td>5.6</td>
+<td>8.5</td>
 <td>1.6</td>
-<td>3.9</td>
-<td>5.5</td>
-<td>0.9</td>
-<td>0.3</td>
+<td>0.5</td>
 <td>1.0</td>
-<td>0.9</td>
-<td>1.7</td>
-<td>12.9</td>
+<td>1.5</td>
+<td>2.7</td>
+<td>10.3</td>
 </tr>
 </tbody>
 </table>
@@ -491,6 +492,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.</p>
 
 
 </section>

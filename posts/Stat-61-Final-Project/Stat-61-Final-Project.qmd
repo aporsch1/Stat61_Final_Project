@@ -125,7 +125,7 @@ year = 2022
 url = 'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'
 html = urlopen(url)
 org_html = BeautifulSoup(html)
-#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :)
+#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :) the api was nba_api on PyPI
 
 org_html.findAll('tr', limit=2) #this should get me the columns from the website.
 headers = [th.getText() for th in org_html.findAll('tr', limit=2)[0].findAll('th')]
@@ -141,4 +141,8 @@ player_stats = [[td.getText() for td in rows[i].findAll('td')]
             for i in range(len(rows))]
 data = pd.DataFrame(player_stats, columns = headers)
 data.head() #YAYYYYY
+data.tail()
 ```
+
+So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.
+
