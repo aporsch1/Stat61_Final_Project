@@ -213,7 +213,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> random</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score, silhouette_samples</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.</p>
 <div class="cell" data-execution_count="2">
@@ -307,311 +308,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data.drop(columns<span class="op">=</span>[<span class="st">'Pos'</span>, <span class="st">'Age'</span>, <span class="st">'Tm'</span>, <span class="st">'G'</span>, <span class="st">'GS'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Player</th>
-<th data-quarto-table-cell-role="th">MP</th>
-<th data-quarto-table-cell-role="th">FG</th>
-<th data-quarto-table-cell-role="th">FGA</th>
-<th data-quarto-table-cell-role="th">FG%</th>
-<th data-quarto-table-cell-role="th">3P</th>
-<th data-quarto-table-cell-role="th">3PA</th>
-<th data-quarto-table-cell-role="th">3P%</th>
-<th data-quarto-table-cell-role="th">2P</th>
-<th data-quarto-table-cell-role="th">2PA</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">FT%</th>
-<th data-quarto-table-cell-role="th">ORB</th>
-<th data-quarto-table-cell-role="th">DRB</th>
-<th data-quarto-table-cell-role="th">TRB</th>
-<th data-quarto-table-cell-role="th">AST</th>
-<th data-quarto-table-cell-role="th">STL</th>
-<th data-quarto-table-cell-role="th">BLK</th>
-<th data-quarto-table-cell-role="th">TOV</th>
-<th data-quarto-table-cell-role="th">PF</th>
-<th data-quarto-table-cell-role="th">PTS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Precious Achiuwa</td>
-<td>23.6</td>
-<td>3.6</td>
-<td>8.3</td>
-<td>.439</td>
-<td>0.8</td>
-<td>2.1</td>
-<td>.359</td>
-<td>2.9</td>
-<td>6.1</td>
-<td>...</td>
-<td>.595</td>
-<td>2.0</td>
-<td>4.5</td>
-<td>6.5</td>
-<td>1.1</td>
-<td>0.5</td>
-<td>0.6</td>
-<td>1.2</td>
-<td>2.1</td>
-<td>9.1</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Steven Adams</td>
-<td>26.3</td>
-<td>2.8</td>
-<td>5.1</td>
-<td>.547</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>.000</td>
-<td>2.8</td>
-<td>5.0</td>
-<td>...</td>
-<td>.543</td>
-<td>4.6</td>
-<td>5.4</td>
-<td>10.0</td>
-<td>3.4</td>
-<td>0.9</td>
-<td>0.8</td>
-<td>1.5</td>
-<td>2.0</td>
-<td>6.9</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Bam Adebayo</td>
-<td>32.6</td>
-<td>7.3</td>
-<td>13.0</td>
-<td>.557</td>
-<td>0.0</td>
-<td>0.1</td>
-<td>.000</td>
-<td>7.3</td>
-<td>12.9</td>
-<td>...</td>
-<td>.753</td>
-<td>2.4</td>
-<td>7.6</td>
-<td>10.1</td>
-<td>3.4</td>
-<td>1.4</td>
-<td>0.8</td>
-<td>2.6</td>
-<td>3.1</td>
-<td>19.1</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Santi Aldama</td>
-<td>11.3</td>
-<td>1.7</td>
-<td>4.1</td>
-<td>.402</td>
-<td>0.2</td>
-<td>1.5</td>
-<td>.125</td>
-<td>1.5</td>
-<td>2.6</td>
-<td>...</td>
-<td>.625</td>
-<td>1.0</td>
-<td>1.7</td>
-<td>2.7</td>
-<td>0.7</td>
-<td>0.2</td>
-<td>0.3</td>
-<td>0.5</td>
-<td>1.1</td>
-<td>4.1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>LaMarcus Aldridge</td>
-<td>22.3</td>
-<td>5.4</td>
-<td>9.7</td>
-<td>.550</td>
-<td>0.3</td>
-<td>1.0</td>
-<td>.304</td>
-<td>5.1</td>
-<td>8.8</td>
-<td>...</td>
-<td>.873</td>
-<td>1.6</td>
-<td>3.9</td>
-<td>5.5</td>
-<td>0.9</td>
-<td>0.3</td>
-<td>1.0</td>
-<td>0.9</td>
-<td>1.7</td>
-<td>12.9</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">837</td>
-<td>Thaddeus Young</td>
-<td>18.3</td>
-<td>2.6</td>
-<td>5.5</td>
-<td>.465</td>
-<td>0.7</td>
-<td>1.7</td>
-<td>.395</td>
-<td>1.9</td>
-<td>3.9</td>
-<td>...</td>
-<td>.481</td>
-<td>1.5</td>
-<td>2.9</td>
-<td>4.4</td>
-<td>1.7</td>
-<td>1.2</td>
-<td>0.4</td>
-<td>0.8</td>
-<td>1.7</td>
-<td>6.3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">838</td>
-<td>Trae Young</td>
-<td>34.9</td>
-<td>9.4</td>
-<td>20.3</td>
-<td>.460</td>
-<td>3.1</td>
-<td>8.0</td>
-<td>.382</td>
-<td>6.3</td>
-<td>12.3</td>
-<td>...</td>
-<td>.904</td>
-<td>0.7</td>
-<td>3.1</td>
-<td>3.7</td>
-<td>9.7</td>
-<td>0.9</td>
-<td>0.1</td>
-<td>4.0</td>
-<td>1.7</td>
-<td>28.4</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">839</td>
-<td>Omer Yurtseven</td>
-<td>12.6</td>
-<td>2.3</td>
-<td>4.4</td>
-<td>.526</td>
-<td>0.0</td>
-<td>0.2</td>
-<td>.091</td>
-<td>2.3</td>
-<td>4.2</td>
-<td>...</td>
-<td>.623</td>
-<td>1.5</td>
-<td>3.7</td>
-<td>5.3</td>
-<td>0.9</td>
-<td>0.3</td>
-<td>0.4</td>
-<td>0.7</td>
-<td>1.5</td>
-<td>5.3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">840</td>
-<td>Cody Zeller</td>
-<td>13.1</td>
-<td>1.9</td>
-<td>3.3</td>
-<td>.567</td>
-<td>0.0</td>
-<td>0.1</td>
-<td>.000</td>
-<td>1.9</td>
-<td>3.2</td>
-<td>...</td>
-<td>.776</td>
-<td>1.9</td>
-<td>2.8</td>
-<td>4.6</td>
-<td>0.8</td>
-<td>0.3</td>
-<td>0.2</td>
-<td>0.7</td>
-<td>2.1</td>
-<td>5.2</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">841</td>
-<td>Ivica Zubac</td>
-<td>24.4</td>
-<td>4.1</td>
-<td>6.5</td>
-<td>.626</td>
-<td>0.0</td>
-<td>0.0</td>
-<td></td>
-<td>4.1</td>
-<td>6.5</td>
-<td>...</td>
-<td>.727</td>
-<td>2.9</td>
-<td>5.6</td>
-<td>8.5</td>
-<td>1.6</td>
-<td>0.5</td>
-<td>1.0</td>
-<td>1.5</td>
-<td>2.7</td>
-<td>10.3</td>
-</tr>
-</tbody>
-</table>
-
-<p>842 rows × 24 columns</p>
-</div>
-</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>data.drop(columns<span class="op">=</span>[<span class="st">'Pos'</span>, <span class="st">'Age'</span>, <span class="st">'Tm'</span>, <span class="st">'G'</span>, <span class="st">'GS'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n_components <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">50</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [GaussianMixture(n, covariance_type<span class="op">=</span><span class="st">'full'</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> n <span class="kw">in</span> n_components]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.plot(n_components, [m.bic(X) <span class="cf">for</span> m <span class="kw">in</span> models], label<span class="op">=</span><span class="st">'BIC'</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plt.plot(n_components, [m.aic(X) <span class="cf">for</span> m <span class="kw">in</span> models], label<span class="op">=</span><span class="st">'AIC'</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'best'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'n_components'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Stat-61-Final-Project_files/figure-html/cell-13-output-1.png" width="603" height="429"></p>
+</div>
+</div>
+<p>This code here, uses metrics <em>Bayesian Information Criterion</em> (BIC) and <em>Aikake Information Criterion</em> (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized between 4 and 5 and AIC continues to decrease as the number of components reaches 50. The AIC is equal to <span class="math inline">\(2k-2\ln(L)\)</span> and the BIC is equal to <span class="math inline">\(k\ln(n)-2\ln(L)\)</span> where <span class="math inline">\(k\)</span> is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease.</p>
+<p>This graph essentially says that the model that explains the data the best without overfitting is between 4 and 5 clusters, since that is where BIC is at a minimum.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GaussianMixture(n_components<span class="op">=</span> <span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

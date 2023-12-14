@@ -45,6 +45,8 @@ from numpy import random
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import seaborn as sns 
+from sklearn.metrics import silhouette_score, silhouette_samples
+from sklearn.decomposition import PCA
 ```
 
 To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
@@ -94,7 +96,7 @@ plt.show()
 
 ```
 ```{python}
-pred = gm.predict(x)
+pred = gm.predict(x)    
 
 df = pd.DataFrame({'x':x[:,0], 'y':x[:,1], 'label':pred})
 groups = df.groupby('label')
@@ -125,13 +127,19 @@ This seems to be a problem uniquely well suited to clustering. I plan on looking
 # | output: false
 year = 2022
 url = 'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'
+url2 = 'https://www.basketball-reference.com/leagues/NBA_2023_per_game.html'
 html = urlopen(url)
+html2 = urlopen(url2)
 org_html = BeautifulSoup(html)
+org_html2 = BeautifulSoup(html2)
 #this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :) the api was nba_api on PyPI
 
 org_html.findAll('tr', limit=2) #this should get me the columns from the website.
+org_html2.findAll('tr', limit=2)
 headers = [th.getText() for th in org_html.findAll('tr', limit=2)[0].findAll('th')]
 headers = headers[1:]
+headers2 = [th.getText() for th in org_html2.findAll('tr', limit=2)[0].findAll('th')]
+headers2 = headers2[1:]
 headers
 ```
 
@@ -145,12 +153,17 @@ player_stats = [[td.getText() for td in rows[i].findAll('td')]
 data = pd.DataFrame(player_stats, columns = headers)
 data.head() #YAYYYYY
 data.tail()
+
+rows2 = org_html2.findAll('tr')[1:]
+player_stats2 = [[td.getText() for td in rows[i].findAll('td')]
+            for i in range(len(rows))]
+data2 = pd.DataFrame(player_stats, columns = headers)
 ```
 There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.
 
 
 ```{python}
-data=data.drop(columns=['Pos', 'Age', 'Tm', 'G', 'GS'], axis=1)
+data=data.drop(columns=['Pos', 'Age', 'Tm', 'G', 'GS', '2P', '3P', 'TRB', 'FT','PF'], axis=1)
 ```
 ```{python}
 #| echo: false
@@ -178,6 +191,8 @@ X = X.drop("Player", axis = 1)
 X.replace('', np.nan, inplace=True)
 # Drop rows with NaN values
 X.dropna(inplace=True)
+X['MP'] = pd.to_numeric(X['MP'])
+X = X[X['MP'] >= 10]
 ```
 
 ```{python}
@@ -191,7 +206,39 @@ plt.legend(loc='best')
 plt.xlabel('n_components');
 ```
 
-This code here, uses metrics *Bayesian Information Criterion*(BIC) and *Aikake Information Criterion*(AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized between 4 and 5 and AIC continues to decrease as the number of components reaches 50. 
+This code here, uses metrics *Bayesian Information Criterion* (BIC) and *Aikake Information Criterion* (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized between 4 and 5 and AIC continues to decrease as the number of components reaches 50. The AIC is equal to $2k-2\ln(L)$ and the BIC is equal to $k\ln(n)-2\ln(L)$ where $k$ is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease. 
+
+This graph essentially says that the model that explains the data the best without overfitting is between 4 and 5 clusters, since that is where BIC is at a minimum.
+
 ```{python}
-model = GaussianMixture(n_components= 5, random_state=0).fit(X)
+model = GaussianMixture(n_components=4, random_state=0).fit(X)
+```
+
+```{python}
+preds = pd.Series(model.predict(X))
+X["Cluster"] = preds
+X.dropna()
+```
+
+
+```{python}
+predictors = X.columns[1:24]
+X[predictors] = X[predictors].apply(pd.to_numeric, errors='coerce')
+
+# Create subplots for each predictor
+num_clusters = X['Cluster'].nunique()
+num_predictors = len(predictors)
+
+fig, axes = plt.subplots(num_predictors, num_clusters, figsize=(15, 25))
+for i, predictor in enumerate(predictors):
+    for cluster in range(num_clusters):
+        # Select data for the specific cluster and predictor
+        data = X[X['Cluster'] == cluster][predictor]
+        sns.boxplot(x=data, ax=axes[i, cluster])
+        axes[i, cluster].set_title(f'Cluster {cluster} - {predictor}')
+        axes[i, cluster].set_xlabel('')
+        axes[i, cluster].set_ylabel(predictor)
+
+plt.tight_layout()
+plt.show()
 ```
