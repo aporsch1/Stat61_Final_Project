@@ -150,7 +150,7 @@ There are a few instances of the same player showing multiple times in the dataf
 
 
 ```{python}
-data.drop(columns=['Pos', 'Age', 'Tm', 'G', 'GS'], axis=1)
+data=data.drop(columns=['Pos', 'Age', 'Tm', 'G', 'GS'], axis=1)
 ```
 ```{python}
 #| echo: false
@@ -162,4 +162,36 @@ pl
 grp = data.groupby(["Player"])          ## Grouping the same datapoints together. 
 grp = grp.mean()  
 ```
+
 So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.
+
+```{python}
+#| echo: false
+#| output: false
+X = data.copy(deep=True)
+X = X.drop("Player", axis = 1)
+```
+
+```{python}
+#| echo: false
+#| output: false
+X.replace('', np.nan, inplace=True)
+# Drop rows with NaN values
+X.dropna(inplace=True)
+```
+
+```{python}
+n_components = np.arange(1, 50)
+models = [GaussianMixture(n, covariance_type='full', random_state=0).fit(X)
+          for n in n_components]
+
+plt.plot(n_components, [m.bic(X) for m in models], label='BIC')
+plt.plot(n_components, [m.aic(X) for m in models], label='AIC')
+plt.legend(loc='best')
+plt.xlabel('n_components');
+```
+
+This code here, uses metrics *Bayesian Information Criterion*(BIC) and *Aikake Information Criterion*(AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized between 4 and 5 and AIC continues to decrease as the number of components reaches 50. 
+```{python}
+model = GaussianMixture(n_components= 5, random_state=0).fit(X)
+```
