@@ -136,6 +136,7 @@ headers
 ```
 
 ```{python}
+# | output: false
 #now we want to turn this mess of text we ripped from html into a dataframe (thumbs up emoji)
 
 rows = org_html.findAll('tr')[1:]
@@ -145,14 +146,12 @@ data = pd.DataFrame(player_stats, columns = headers)
 data.head() #YAYYYYY
 data.tail()
 ```
+There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.
 
-So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.
 
 ```{python}
 data.drop(columns=['Pos', 'Age', 'Tm', 'G', 'GS'], axis=1)
 ```
-
-There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.
 ```{python}
 #| echo: false
 #| output: false
@@ -163,3 +162,4 @@ pl
 grp = data.groupby(["Player"])          ## Grouping the same datapoints together. 
 grp = grp.mean()  
 ```
+So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.

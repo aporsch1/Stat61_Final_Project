@@ -229,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now I’m going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
 <div class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="63">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>{'covariance_type': 'full',
  'init_params': 'kmeans',
  'max_iter': 100,
@@ -304,169 +304,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(player_stats, columns <span class="op">=</span> headers)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>data.head() <span class="co">#YAYYYYY</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>data.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="67">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Player</th>
-<th data-quarto-table-cell-role="th">Pos</th>
-<th data-quarto-table-cell-role="th">Age</th>
-<th data-quarto-table-cell-role="th">Tm</th>
-<th data-quarto-table-cell-role="th">G</th>
-<th data-quarto-table-cell-role="th">GS</th>
-<th data-quarto-table-cell-role="th">MP</th>
-<th data-quarto-table-cell-role="th">FG</th>
-<th data-quarto-table-cell-role="th">FGA</th>
-<th data-quarto-table-cell-role="th">FG%</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">FT%</th>
-<th data-quarto-table-cell-role="th">ORB</th>
-<th data-quarto-table-cell-role="th">DRB</th>
-<th data-quarto-table-cell-role="th">TRB</th>
-<th data-quarto-table-cell-role="th">AST</th>
-<th data-quarto-table-cell-role="th">STL</th>
-<th data-quarto-table-cell-role="th">BLK</th>
-<th data-quarto-table-cell-role="th">TOV</th>
-<th data-quarto-table-cell-role="th">PF</th>
-<th data-quarto-table-cell-role="th">PTS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">837</td>
-<td>Thaddeus Young</td>
-<td>PF</td>
-<td>33</td>
-<td>TOR</td>
-<td>26</td>
-<td>0</td>
-<td>18.3</td>
-<td>2.6</td>
-<td>5.5</td>
-<td>.465</td>
-<td>...</td>
-<td>.481</td>
-<td>1.5</td>
-<td>2.9</td>
-<td>4.4</td>
-<td>1.7</td>
-<td>1.2</td>
-<td>0.4</td>
-<td>0.8</td>
-<td>1.7</td>
-<td>6.3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">838</td>
-<td>Trae Young</td>
-<td>PG</td>
-<td>23</td>
-<td>ATL</td>
-<td>76</td>
-<td>76</td>
-<td>34.9</td>
-<td>9.4</td>
-<td>20.3</td>
-<td>.460</td>
-<td>...</td>
-<td>.904</td>
-<td>0.7</td>
-<td>3.1</td>
-<td>3.7</td>
-<td>9.7</td>
-<td>0.9</td>
-<td>0.1</td>
-<td>4.0</td>
-<td>1.7</td>
-<td>28.4</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">839</td>
-<td>Omer Yurtseven</td>
-<td>C</td>
-<td>23</td>
-<td>MIA</td>
-<td>56</td>
-<td>12</td>
-<td>12.6</td>
-<td>2.3</td>
-<td>4.4</td>
-<td>.526</td>
-<td>...</td>
-<td>.623</td>
-<td>1.5</td>
-<td>3.7</td>
-<td>5.3</td>
-<td>0.9</td>
-<td>0.3</td>
-<td>0.4</td>
-<td>0.7</td>
-<td>1.5</td>
-<td>5.3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">840</td>
-<td>Cody Zeller</td>
-<td>C</td>
-<td>29</td>
-<td>POR</td>
-<td>27</td>
-<td>0</td>
-<td>13.1</td>
-<td>1.9</td>
-<td>3.3</td>
-<td>.567</td>
-<td>...</td>
-<td>.776</td>
-<td>1.9</td>
-<td>2.8</td>
-<td>4.6</td>
-<td>0.8</td>
-<td>0.3</td>
-<td>0.2</td>
-<td>0.7</td>
-<td>2.1</td>
-<td>5.2</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">841</td>
-<td>Ivica Zubac</td>
-<td>C</td>
-<td>24</td>
-<td>LAC</td>
-<td>76</td>
-<td>76</td>
-<td>24.4</td>
-<td>4.1</td>
-<td>6.5</td>
-<td>.626</td>
-<td>...</td>
-<td>.727</td>
-<td>2.9</td>
-<td>5.6</td>
-<td>8.5</td>
-<td>1.6</td>
-<td>0.5</td>
-<td>1.0</td>
-<td>1.5</td>
-<td>2.7</td>
-<td>10.3</td>
-</tr>
-</tbody>
-</table>
-
-<p>5 rows × 29 columns</p>
 </div>
-</div>
-</div>
-<p>So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.</p>
+<p>There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data.drop(columns<span class="op">=</span>[<span class="st">'Pos'</span>, <span class="st">'Age'</span>, <span class="st">'Tm'</span>, <span class="st">'G'</span>, <span class="st">'GS'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="68">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -769,7 +611,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.</p>
+<p>So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.</p>
 
 
 </section>
