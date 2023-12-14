@@ -38,6 +38,7 @@ GMMs are used to observe clusters everywhere. They are used to create customer a
 #importing necessary packages
 from sklearn.mixture import GaussianMixture
 from sklearn.datasets import make_blobs
+from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt 
 import pandas as pd 
 import numpy as np
@@ -206,29 +207,43 @@ X["Cluster"] = preds
 X.dropna()
 ```
 
-
 ```{python}
-predictors = X.columns[1:23]
-X[predictors] = X[predictors].apply(pd.to_numeric, errors='coerce')
+Y = X.drop('Cluster', axis = 1)
+cluster_assignments = model.predict(Y)
 
-# Create subplots for each predictor
-num_clusters = X['Cluster'].nunique()
-num_predictors = len(predictors)
+# Get the cluster centers from the fitted model
+cluster_centers = model.means_  # This will give the centers of each cluster
 
-fig, axes = plt.subplots(num_predictors, num_clusters, figsize=(15, 25))
-for i, predictor in enumerate(predictors):
-    for cluster in range(num_clusters):
-        # Select data for the specific cluster and predictor
-        data = X[X['Cluster'] == cluster][predictor]
-        sns.boxplot(x=data, ax=axes[i, cluster])
-        axes[i, cluster].set_title(f'Cluster {cluster} - {predictor}')
-        axes[i, cluster].set_xlabel('')
-        axes[i, cluster].set_ylabel(predictor)
+# Calculate distances between each player and the cluster centers
+distances_to_centers = np.linalg.norm(Y - cluster_centers[cluster_assignments], axis=1)
 
+# Find the indices of players closest to each cluster center
+closest_players_indices = np.argmin(distances_to_centers, axis=0)
+
+# Get the details of players closest to each cluster center
+closest_players = Y.iloc[closest_players_indices]
+```
+```{python}
+X_numeric = X.select_dtypes(include='number')
+
+# Scale the numeric columns
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_numeric)
+
+# Convert back to DataFrame (keeping the column names)
+X_scaled_df = pd.DataFrame(X_scaled, columns=X_numeric.columns)
+
+# Add the cluster assignments to your scaled data
+X_scaled_df['Cluster'] = cluster_assignments
+
+# Melt the DataFrame to create a long-form dataset for violin plot
+melted_data_scaled = X_scaled_df.melt(id_vars='Cluster', var_name='Statistic', value_name='Value')
+
+# Plotting separate violin plots for each statistic
+g = sns.FacetGrid(melted_data_scaled, col='Statistic', col_wrap=3, height=4)
+g.map(sns.violinplot, 'Cluster', 'Value', palette='Set3')
+g.set_xticklabels(rotation=45)
+g.set_titles('{col_name}')
 plt.tight_layout()
 plt.show()
-```
-
-```{python}
-model.means_
 ```

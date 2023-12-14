@@ -207,14 +207,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#importing necessary packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.mixture <span class="im">import</span> GaussianMixture</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> random</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score, silhouette_samples</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> random</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score, silhouette_samples</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.</p>
 <div class="cell" data-execution_count="2">
@@ -230,7 +233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now I’m going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
 <div class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>{'covariance_type': 'full',
  'init_params': 'kmeans',
  'max_iter': 100,
@@ -260,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> gm.predict(x)</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> gm.predict(x)    </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>:x[:,<span class="dv">0</span>], <span class="st">'y'</span>:x[:,<span class="dv">1</span>], <span class="st">'label'</span>:pred})</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> df.groupby(<span class="st">'label'</span>)</span>
@@ -285,34 +288,352 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don’t seem to suffice, which means that we want to find new labels for positions in order to regroup players.</p>
 <p>This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e.&nbsp;if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.</p>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>year <span class="op">=</span> <span class="dv">2022</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>html <span class="op">=</span> urlopen(url)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>org_html <span class="op">=</span> BeautifulSoup(html)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :) the api was nba_api on PyPI</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>urls <span class="op">=</span> [<span class="st">'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'</span>, <span class="st">'https://www.basketball-reference.com/leagues/NBA_2023_per_game.html'</span>, <span class="st">'https://www.basketball-reference.com/leagues/NBA_2021_per_game.html'</span>, <span class="st">'https://www.basketball-reference.com/leagues/NBA_2019_per_game.html'</span>, <span class="st">'https://www.basketball-reference.com/leagues/NBA_2018_per_game.html'</span>, <span class="st">'https://www.basketball-reference.com/leagues/NBA_2017_per_game.html'</span>, <span class="st">'https://www.basketball-reference.com/leagues/NBA_2016_per_game.html'</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scrape_basketball_data(url):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    html <span class="op">=</span> urlopen(url)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    org_html <span class="op">=</span> BeautifulSoup(html)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>) <span class="co">#this should get me the columns from the website.</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> [th.getText() <span class="cf">for</span> th <span class="kw">in</span> org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>)[<span class="dv">0</span>].findAll(<span class="st">'th'</span>)]</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> headers[<span class="dv">1</span>:]</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>headers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    headers <span class="op">=</span> [th.getText() <span class="cf">for</span> th <span class="kw">in</span> org_html.findAll(<span class="st">'tr'</span>, limit<span class="op">=</span><span class="dv">2</span>)[<span class="dv">0</span>].findAll(<span class="st">'th'</span>)]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    headers <span class="op">=</span> headers[<span class="dv">1</span>:]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> org_html.findAll(<span class="st">'tr'</span>)[<span class="dv">1</span>:]</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    player_stats <span class="op">=</span> [[td.getText() <span class="cf">for</span> td <span class="kw">in</span> rows[i].findAll(<span class="st">'td'</span>)] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(rows))]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> pd.DataFrame(player_stats, columns <span class="op">=</span> headers)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> data</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> aggregate_data_from_urls(urls):</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    all_dataframes <span class="op">=</span> []</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> url <span class="kw">in</span> urls:</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> scrape_basketball_data(url)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        all_dataframes.append(df)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    combined_data <span class="op">=</span> pd.concat(all_dataframes, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    combined_data <span class="op">=</span> combined_data.<span class="bu">apply</span>(pd.to_numeric, errors<span class="op">=</span><span class="st">'ignore'</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    aggregated_data <span class="op">=</span> combined_data.groupby(<span class="st">'Player'</span>, as_index<span class="op">=</span><span class="va">False</span>).mean()</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> aggregated_data</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> aggregate_data_from_urls(urls)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'MP'</span>]<span class="op">&gt;=</span><span class="dv">10</span>]</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/6_/c68mr5wx1xz8wp1g177rf99r0000gn/T/ipykernel_21839/1310375822.py:25: FutureWarning:
+
+The default value of numeric_only in DataFrameGroupBy.mean is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+</code></pre>
 </div>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now we want to turn this mess of text we ripped from html into a dataframe (thumbs up emoji)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> org_html.findAll(<span class="st">'tr'</span>)[<span class="dv">1</span>:]</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>player_stats <span class="op">=</span> [[td.getText() <span class="cf">for</span> td <span class="kw">in</span> rows[i].findAll(<span class="st">'td'</span>)]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(rows))]</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(player_stats, columns <span class="op">=</span> headers)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>data.head() <span class="co">#YAYYYYY</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>data.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Player</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">G</th>
+<th data-quarto-table-cell-role="th">GS</th>
+<th data-quarto-table-cell-role="th">MP</th>
+<th data-quarto-table-cell-role="th">FG</th>
+<th data-quarto-table-cell-role="th">FGA</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">3P</th>
+<th data-quarto-table-cell-role="th">3PA</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">ORB</th>
+<th data-quarto-table-cell-role="th">DRB</th>
+<th data-quarto-table-cell-role="th">TRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">TOV</th>
+<th data-quarto-table-cell-role="th">PF</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>AJ Griffin</td>
+<td>19.000000</td>
+<td>72.000000</td>
+<td>12.000000</td>
+<td>19.500000</td>
+<td>3.400000</td>
+<td>7.400000</td>
+<td>0.465000</td>
+<td>1.400000</td>
+<td>3.600000</td>
+<td>...</td>
+<td>0.894000</td>
+<td>0.500000</td>
+<td>1.600000</td>
+<td>2.100000</td>
+<td>1.000000</td>
+<td>0.600000</td>
+<td>0.200000</td>
+<td>0.600000</td>
+<td>1.200000</td>
+<td>8.900000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Aaron Brooks</td>
+<td>32.000000</td>
+<td>55.333333</td>
+<td>0.333333</td>
+<td>11.933333</td>
+<td>1.833333</td>
+<td>4.533333</td>
+<td>0.403333</td>
+<td>0.666667</td>
+<td>1.900000</td>
+<td>...</td>
+<td>0.764333</td>
+<td>0.266667</td>
+<td>0.766667</td>
+<td>1.033333</td>
+<td>1.700000</td>
+<td>0.333333</td>
+<td>0.066667</td>
+<td>0.833333</td>
+<td>1.400000</td>
+<td>4.800000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>Aaron Gordon</td>
+<td>23.777778</td>
+<td>59.666667</td>
+<td>54.111111</td>
+<td>29.355556</td>
+<td>5.200000</td>
+<td>10.966667</td>
+<td>0.477111</td>
+<td>1.200000</td>
+<td>3.555556</td>
+<td>...</td>
+<td>0.683556</td>
+<td>1.711111</td>
+<td>4.544444</td>
+<td>6.266667</td>
+<td>2.733333</td>
+<td>0.744444</td>
+<td>0.688889</td>
+<td>1.644444</td>
+<td>1.955556</td>
+<td>13.777778</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Aaron Harrison</td>
+<td>22.000000</td>
+<td>11.666667</td>
+<td>1.000000</td>
+<td>11.233333</td>
+<td>0.766667</td>
+<td>3.133333</td>
+<td>0.179333</td>
+<td>0.366667</td>
+<td>1.900000</td>
+<td>...</td>
+<td>0.560667</td>
+<td>0.200000</td>
+<td>1.100000</td>
+<td>1.333333</td>
+<td>0.633333</td>
+<td>0.433333</td>
+<td>0.066667</td>
+<td>0.166667</td>
+<td>1.300000</td>
+<td>2.600000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Aaron Holiday</td>
+<td>24.500000</td>
+<td>50.833333</td>
+<td>7.333333</td>
+<td>15.466667</td>
+<td>2.216667</td>
+<td>5.250000</td>
+<td>0.422333</td>
+<td>0.733333</td>
+<td>1.916667</td>
+<td>...</td>
+<td>0.848333</td>
+<td>0.333333</td>
+<td>1.316667</td>
+<td>1.633333</td>
+<td>2.116667</td>
+<td>0.633333</td>
+<td>0.166667</td>
+<td>0.966667</td>
+<td>1.433333</td>
+<td>6.033333</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1218</td>
+<td>Zhaire Smith</td>
+<td>19.000000</td>
+<td>6.000000</td>
+<td>2.000000</td>
+<td>18.500000</td>
+<td>2.300000</td>
+<td>5.700000</td>
+<td>0.412000</td>
+<td>1.000000</td>
+<td>2.700000</td>
+<td>...</td>
+<td>0.750000</td>
+<td>0.500000</td>
+<td>1.700000</td>
+<td>2.200000</td>
+<td>1.700000</td>
+<td>0.300000</td>
+<td>0.300000</td>
+<td>1.000000</td>
+<td>1.300000</td>
+<td>6.700000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1220</td>
+<td>Ziaire Williams</td>
+<td>20.500000</td>
+<td>49.500000</td>
+<td>17.500000</td>
+<td>18.450000</td>
+<td>2.700000</td>
+<td>6.050000</td>
+<td>0.439500</td>
+<td>0.950000</td>
+<td>3.250000</td>
+<td>...</td>
+<td>0.777500</td>
+<td>0.400000</td>
+<td>1.700000</td>
+<td>2.100000</td>
+<td>0.950000</td>
+<td>0.500000</td>
+<td>0.200000</td>
+<td>0.850000</td>
+<td>1.700000</td>
+<td>6.900000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1221</td>
+<td>Zion Williamson</td>
+<td>21.000000</td>
+<td>45.000000</td>
+<td>45.000000</td>
+<td>33.100000</td>
+<td>10.100000</td>
+<td>16.600000</td>
+<td>0.609500</td>
+<td>0.200000</td>
+<td>0.650000</td>
+<td>...</td>
+<td>0.706000</td>
+<td>2.350000</td>
+<td>4.750000</td>
+<td>7.100000</td>
+<td>4.150000</td>
+<td>1.000000</td>
+<td>0.600000</td>
+<td>3.050000</td>
+<td>2.200000</td>
+<td>26.500000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1223</td>
+<td>Álex Abrines</td>
+<td>24.000000</td>
+<td>58.000000</td>
+<td>5.333333</td>
+<td>16.533333</td>
+<td>1.766667</td>
+<td>4.666667</td>
+<td>0.381667</td>
+<td>1.266667</td>
+<td>3.533333</td>
+<td>...</td>
+<td>0.889667</td>
+<td>0.266667</td>
+<td>1.200000</td>
+<td>1.433333</td>
+<td>0.533333</td>
+<td>0.500000</td>
+<td>0.133333</td>
+<td>0.433333</td>
+<td>1.700000</td>
+<td>5.333333</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1225</td>
+<td>Ömer Aşık</td>
+<td>30.400000</td>
+<td>27.000000</td>
+<td>16.600000</td>
+<td>13.360000</td>
+<td>0.800000</td>
+<td>1.760000</td>
+<td>0.438000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>...</td>
+<td>0.355200</td>
+<td>0.960000</td>
+<td>2.840000</td>
+<td>3.820000</td>
+<td>0.300000</td>
+<td>0.200000</td>
+<td>0.280000</td>
+<td>0.660000</td>
+<td>1.400000</td>
+<td>2.040000</td>
+</tr>
+</tbody>
+</table>
+
+<p>905 rows × 27 columns</p>
+</div>
+</div>
 </div>
 <p>There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.</p>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>data.drop(columns<span class="op">=</span>[<span class="st">'Pos'</span>, <span class="st">'Age'</span>, <span class="st">'Tm'</span>, <span class="st">'G'</span>, <span class="st">'GS'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>df.drop(columns<span class="op">=</span>[<span class="st">'Age'</span>, <span class="st">'G'</span>, <span class="st">'GS'</span>, <span class="st">'2P'</span>, <span class="st">'3P'</span>, <span class="st">'TRB'</span>, <span class="st">'FT'</span>,<span class="st">'PF'</span>, <span class="st">'FG'</span>, <span class="st">'MP'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.</p>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n_components <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">50</span>)</span>
+<p>So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e.&nbsp;those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n_components <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">15</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [GaussianMixture(n, covariance_type<span class="op">=</span><span class="st">'full'</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> n <span class="kw">in</span> n_components]</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -321,13 +642,321 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'best'</span>)</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'n_components'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="Stat-61-Final-Project_files/figure-html/cell-13-output-1.png" width="603" height="429"></p>
+<p><img src="Stat-61-Final-Project_files/figure-html/cell-11-output-1.png" width="603" height="429"></p>
 </div>
 </div>
 <p>This code here, uses metrics <em>Bayesian Information Criterion</em> (BIC) and <em>Aikake Information Criterion</em> (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized between 4 and 5 and AIC continues to decrease as the number of components reaches 50. The AIC is equal to <span class="math inline">\(2k-2\ln(L)\)</span> and the BIC is equal to <span class="math inline">\(k\ln(n)-2\ln(L)\)</span> where <span class="math inline">\(k\)</span> is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease.</p>
 <p>This graph essentially says that the model that explains the data the best without overfitting is between 4 and 5 clusters, since that is where BIC is at a minimum.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GaussianMixture(n_components<span class="op">=</span><span class="dv">4</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>preds <span class="op">=</span> pd.Series(model.predict(X))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>X[<span class="st">"Cluster"</span>] <span class="op">=</span> preds</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>X.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">FGA</th>
+<th data-quarto-table-cell-role="th">FG%</th>
+<th data-quarto-table-cell-role="th">3PA</th>
+<th data-quarto-table-cell-role="th">3P%</th>
+<th data-quarto-table-cell-role="th">2PA</th>
+<th data-quarto-table-cell-role="th">2P%</th>
+<th data-quarto-table-cell-role="th">eFG%</th>
+<th data-quarto-table-cell-role="th">FTA</th>
+<th data-quarto-table-cell-role="th">FT%</th>
+<th data-quarto-table-cell-role="th">ORB</th>
+<th data-quarto-table-cell-role="th">DRB</th>
+<th data-quarto-table-cell-role="th">AST</th>
+<th data-quarto-table-cell-role="th">STL</th>
+<th data-quarto-table-cell-role="th">BLK</th>
+<th data-quarto-table-cell-role="th">TOV</th>
+<th data-quarto-table-cell-role="th">PTS</th>
+<th data-quarto-table-cell-role="th">Cluster</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>7.400000</td>
+<td>0.465000</td>
+<td>3.600000</td>
+<td>0.390000</td>
+<td>3.800000</td>
+<td>0.536000</td>
+<td>0.560000</td>
+<td>0.700000</td>
+<td>0.894000</td>
+<td>0.500000</td>
+<td>1.600000</td>
+<td>1.000000</td>
+<td>0.600000</td>
+<td>0.200000</td>
+<td>0.600000</td>
+<td>8.900000</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4.533333</td>
+<td>0.403333</td>
+<td>1.900000</td>
+<td>0.362333</td>
+<td>2.633333</td>
+<td>0.433667</td>
+<td>0.480000</td>
+<td>0.600000</td>
+<td>0.764333</td>
+<td>0.266667</td>
+<td>0.766667</td>
+<td>1.700000</td>
+<td>0.333333</td>
+<td>0.066667</td>
+<td>0.833333</td>
+<td>4.800000</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>10.966667</td>
+<td>0.477111</td>
+<td>3.555556</td>
+<td>0.325222</td>
+<td>7.422222</td>
+<td>0.544667</td>
+<td>0.529222</td>
+<td>3.222222</td>
+<td>0.683556</td>
+<td>1.711111</td>
+<td>4.544444</td>
+<td>2.733333</td>
+<td>0.744444</td>
+<td>0.688889</td>
+<td>1.644444</td>
+<td>13.777778</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>3.133333</td>
+<td>0.179333</td>
+<td>1.900000</td>
+<td>0.169667</td>
+<td>1.233333</td>
+<td>0.202333</td>
+<td>0.227667</td>
+<td>0.966667</td>
+<td>0.560667</td>
+<td>0.200000</td>
+<td>1.100000</td>
+<td>0.633333</td>
+<td>0.433333</td>
+<td>0.066667</td>
+<td>0.166667</td>
+<td>2.600000</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>5.250000</td>
+<td>0.422333</td>
+<td>1.916667</td>
+<td>0.380333</td>
+<td>3.316667</td>
+<td>0.448000</td>
+<td>0.491833</td>
+<td>1.050000</td>
+<td>0.848333</td>
+<td>0.333333</td>
+<td>1.316667</td>
+<td>2.116667</td>
+<td>0.633333</td>
+<td>0.166667</td>
+<td>0.966667</td>
+<td>6.033333</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">867</td>
+<td>7.400000</td>
+<td>0.437000</td>
+<td>2.500000</td>
+<td>0.353000</td>
+<td>4.900000</td>
+<td>0.480000</td>
+<td>0.497000</td>
+<td>1.000000</td>
+<td>0.905000</td>
+<td>0.100000</td>
+<td>1.600000</td>
+<td>2.400000</td>
+<td>0.300000</td>
+<td>0.100000</td>
+<td>1.400000</td>
+<td>8.200000</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">868</td>
+<td>10.050000</td>
+<td>0.435000</td>
+<td>2.650000</td>
+<td>0.314000</td>
+<td>7.400000</td>
+<td>0.477500</td>
+<td>0.476000</td>
+<td>2.100000</td>
+<td>0.756500</td>
+<td>0.400000</td>
+<td>2.650000</td>
+<td>3.950000</td>
+<td>1.500000</td>
+<td>0.450000</td>
+<td>2.150000</td>
+<td>11.150000</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">869</td>
+<td>7.480000</td>
+<td>0.521000</td>
+<td>2.700000</td>
+<td>0.314400</td>
+<td>4.800000</td>
+<td>0.590600</td>
+<td>0.578600</td>
+<td>1.120000</td>
+<td>0.859400</td>
+<td>0.280000</td>
+<td>2.020000</td>
+<td>3.760000</td>
+<td>0.800000</td>
+<td>0.140000</td>
+<td>0.720000</td>
+<td>9.360000</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">870</td>
+<td>6.844444</td>
+<td>0.633444</td>
+<td>0.133333</td>
+<td>0.107111</td>
+<td>6.711111</td>
+<td>0.644222</td>
+<td>0.635000</td>
+<td>3.222222</td>
+<td>0.661556</td>
+<td>1.711111</td>
+<td>3.033333</td>
+<td>1.366667</td>
+<td>0.466667</td>
+<td>0.655556</td>
+<td>0.933333</td>
+<td>10.888889</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">871</td>
+<td>5.328571</td>
+<td>0.438429</td>
+<td>2.314286</td>
+<td>0.326143</td>
+<td>3.014286</td>
+<td>0.522286</td>
+<td>0.508571</td>
+<td>1.942857</td>
+<td>0.777286</td>
+<td>0.671429</td>
+<td>2.657143</td>
+<td>1.100000</td>
+<td>0.442857</td>
+<td>0.328571</td>
+<td>1.000000</td>
+<td>7.214286</td>
+<td>2.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>621 rows × 17 columns</p>
+</div>
+</div>
+</div>
 <div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GaussianMixture(n_components<span class="op">=</span> <span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> X.drop(<span class="st">'Cluster'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>cluster_assignments <span class="op">=</span> model.predict(Y)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the cluster centers from the fitted model</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>cluster_centers <span class="op">=</span> model.means_  <span class="co"># This will give the centers of each cluster</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate distances between each player and the cluster centers</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>distances_to_centers <span class="op">=</span> np.linalg.norm(Y <span class="op">-</span> cluster_centers[cluster_assignments], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the indices of players closest to each cluster center</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>closest_players_indices <span class="op">=</span> np.argmin(distances_to_centers, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the details of players closest to each cluster center</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>closest_players <span class="op">=</span> Y.iloc[closest_players_indices]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>X_numeric <span class="op">=</span> X.select_dtypes(include<span class="op">=</span><span class="st">'number'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the numeric columns</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X_numeric)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert back to DataFrame (keeping the column names)</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>X_scaled_df <span class="op">=</span> pd.DataFrame(X_scaled, columns<span class="op">=</span>X_numeric.columns)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the cluster assignments to your scaled data</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>X_scaled_df[<span class="st">'Cluster'</span>] <span class="op">=</span> cluster_assignments</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the DataFrame to create a long-form dataset for violin plot</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>melted_data_scaled <span class="op">=</span> X_scaled_df.melt(id_vars<span class="op">=</span><span class="st">'Cluster'</span>, var_name<span class="op">=</span><span class="st">'Statistic'</span>, value_name<span class="op">=</span><span class="st">'Value'</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting separate violin plots for each statistic</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.FacetGrid(melted_data_scaled, col<span class="op">=</span><span class="st">'Statistic'</span>, col_wrap<span class="op">=</span><span class="dv">3</span>, height<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>g.<span class="bu">map</span>(sns.violinplot, <span class="st">'Cluster'</span>, <span class="st">'Value'</span>, palette<span class="op">=</span><span class="st">'Set3'</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>g.set_xticklabels(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>g.set_titles(<span class="st">'</span><span class="sc">{col_name}</span><span class="st">'</span>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/abeporschet/anaconda3/lib/python3.11/site-packages/seaborn/axisgrid.py:712: UserWarning:
+
+Using the violinplot function without specifying `order` is likely to produce an incorrect plot.
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="Stat-61-Final-Project_files/figure-html/cell-15-output-2.png" width="1141" height="2292"></p>
+</div>
 </div>
 
 
