@@ -47,6 +47,7 @@ from bs4 import BeautifulSoup
 import seaborn as sns 
 from sklearn.metrics import silhouette_score, silhouette_samples
 from sklearn.decomposition import PCA
+import requests
 ```
 
 To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
@@ -124,64 +125,51 @@ People are playing basketball differently. To effectively understand the game, t
 This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e. if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.
 
 ```{python}
-# | output: false
-year = 2022
-url = 'https://www.basketball-reference.com/leagues/NBA_2022_per_game.html'
-url2 = 'https://www.basketball-reference.com/leagues/NBA_2023_per_game.html'
-html = urlopen(url)
-html2 = urlopen(url2)
-org_html = BeautifulSoup(html)
-org_html2 = BeautifulSoup(html2)
-#this reads in data from an html file from basketball reference. I took this code from the documentation of an api for basketball data but I didn't like their functionality and so I just altered their source code to get my own thing :) the api was nba_api on PyPI
+urls = ['https://www.basketball-reference.com/leagues/NBA_2022_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2023_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2021_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2019_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2018_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2017_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2016_per_game.html']
+def scrape_basketball_data(url):
+    html = urlopen(url)
+    org_html = BeautifulSoup(html)
+    org_html.findAll('tr', limit=2)
 
-org_html.findAll('tr', limit=2) #this should get me the columns from the website.
-org_html2.findAll('tr', limit=2)
-headers = [th.getText() for th in org_html.findAll('tr', limit=2)[0].findAll('th')]
-headers = headers[1:]
-headers2 = [th.getText() for th in org_html2.findAll('tr', limit=2)[0].findAll('th')]
-headers2 = headers2[1:]
-headers
+    headers = [th.getText() for th in org_html.findAll('tr', limit=2)[0].findAll('th')]
+    headers = headers[1:]
+
+    rows = org_html.findAll('tr')[1:]
+    player_stats = [[td.getText() for td in rows[i].findAll('td')] for i in range(len(rows))]
+    data = pd.DataFrame(player_stats, columns = headers)
+    
+    return data
+
+def aggregate_data_from_urls(urls):
+    all_dataframes = []
+    for url in urls:
+        df = scrape_basketball_data(url)
+        all_dataframes.append(df)
+    
+    combined_data = pd.concat(all_dataframes, ignore_index=True)
+    combined_data = combined_data.apply(pd.to_numeric, errors='ignore')
+    
+    aggregated_data = combined_data.groupby('Player', as_index=False).mean()
+    return aggregated_data
+
+df = aggregate_data_from_urls(urls)
+df = df[df['MP']>=10]
+df
 ```
 
-```{python}
-# | output: false
-#now we want to turn this mess of text we ripped from html into a dataframe (thumbs up emoji)
-
-rows = org_html.findAll('tr')[1:]
-player_stats = [[td.getText() for td in rows[i].findAll('td')]
-            for i in range(len(rows))]
-data = pd.DataFrame(player_stats, columns = headers)
-data.head() #YAYYYYY
-data.tail()
-
-rows2 = org_html2.findAll('tr')[1:]
-player_stats2 = [[td.getText() for td in rows[i].findAll('td')]
-            for i in range(len(rows))]
-data2 = pd.DataFrame(player_stats, columns = headers)
-```
 There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.
 
 
 ```{python}
-data=data.drop(columns=['Pos', 'Age', 'Tm', 'G', 'GS', '2P', '3P', 'TRB', 'FT','PF'], axis=1)
-```
-```{python}
-#| echo: false
-#| output: false
-rep = data.Player.value_counts() ## Here is the list of such players
-rep
-pl = np.where([rep > 1])[1]
-pl
-grp = data.groupby(["Player"])          ## Grouping the same datapoints together. 
-grp = grp.mean()  
+df=df.drop(columns=['Age', 'G', 'GS', '2P', '3P', 'TRB', 'FT','PF', 'FG', 'MP'], axis=1)
 ```
 
-So now that we have this data, I will take all of the features besides position, age, team, games played, and games started and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor.
+So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e. those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons.
 
 ```{python}
 #| echo: false
 #| output: false
-X = data.copy(deep=True)
+X = df.copy(deep=True)
 X = X.drop("Player", axis = 1)
 ```
 
@@ -191,12 +179,10 @@ X = X.drop("Player", axis = 1)
 X.replace('', np.nan, inplace=True)
 # Drop rows with NaN values
 X.dropna(inplace=True)
-X['MP'] = pd.to_numeric(X['MP'])
-X = X[X['MP'] >= 10]
 ```
 
 ```{python}
-n_components = np.arange(1, 50)
+n_components = np.arange(1, 15)
 models = [GaussianMixture(n, covariance_type='full', random_state=0).fit(X)
           for n in n_components]
 
@@ -222,7 +208,7 @@ X.dropna()
 
 
 ```{python}
-predictors = X.columns[1:24]
+predictors = X.columns[1:23]
 X[predictors] = X[predictors].apply(pd.to_numeric, errors='coerce')
 
 # Create subplots for each predictor
@@ -241,4 +227,8 @@ for i, predictor in enumerate(predictors):
 
 plt.tight_layout()
 plt.show()
+```
+
+```{python}
+model.means_
 ```
