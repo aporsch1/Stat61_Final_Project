@@ -65,6 +65,7 @@ plt.show()
 Now I'm going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.
 
 ```{python}
+#| output: false
 #| echo: false
 gm = GaussianMixture(n_components=5).fit(x)
 
@@ -126,6 +127,8 @@ People are playing basketball differently. To effectively understand the game, t
 This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e. if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.
 
 ```{python}
+#| echo: false
+#| output: false
 urls = ['https://www.basketball-reference.com/leagues/NBA_2022_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2023_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2021_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2019_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2018_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2017_per_game.html', 'https://www.basketball-reference.com/leagues/NBA_2016_per_game.html']
 def scrape_basketball_data(url):
     html = urlopen(url)
@@ -162,6 +165,8 @@ There are a few instances of the same player showing multiple times in the dataf
 
 
 ```{python}
+#| echo: false
+#| output: false
 df=df.drop(columns=['Age', 'G', 'GS', '2P', '3P', 'TRB', 'FT','PF', 'FG', 'MP'], axis=1)
 ```
 
@@ -193,7 +198,7 @@ plt.legend(loc='best')
 plt.xlabel('n_components');
 ```
 
-This code here, uses metrics *Bayesian Information Criterion* (BIC) and *Aikake Information Criterion* (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized between 4 and 5 and AIC continues to decrease as the number of components reaches 50. The AIC is equal to $2k-2\ln(L)$ and the BIC is equal to $k\ln(n)-2\ln(L)$ where $k$ is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease. 
+This code here, uses metrics *Bayesian Information Criterion* (BIC) and *Aikake Information Criterion* (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized at right around 4 clusters and AIC continues to decrease as the number of components reaches 15. The AIC is equal to $2k-2\ln(L)$ and the BIC is equal to $k\ln(n)-2\ln(L)$ where $k$ is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease. 
 
 This graph essentially says that the model that explains the data the best without overfitting is between 4 and 5 clusters, since that is where BIC is at a minimum.
 
@@ -202,12 +207,16 @@ model = GaussianMixture(n_components=4, random_state=0).fit(X)
 ```
 
 ```{python}
+#| echo: false
+#| output: false
 preds = pd.Series(model.predict(X))
 X["Cluster"] = preds
 X.dropna()
 ```
 
 ```{python}
+#| echo: false
+#| output: false
 Y = X.drop('Cluster', axis = 1)
 cluster_assignments = model.predict(Y)
 
@@ -224,6 +233,8 @@ closest_players_indices = np.argmin(distances_to_centers, axis=0)
 closest_players = Y.iloc[closest_players_indices]
 ```
 ```{python}
+#| echo: false
+#| output: false
 X_numeric = X.select_dtypes(include='number')
 
 # Scale the numeric columns
@@ -247,3 +258,50 @@ g.set_titles('{col_name}')
 plt.tight_layout()
 plt.show()
 ```
+```{python}
+#| echo: false
+#| output: false
+"""X_numeric = X.select_dtypes(include='number')
+
+# Scale the numeric columns
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_numeric)
+
+# Convert back to DataFrame (keeping the column names)
+X_scaled_df = pd.DataFrame(X_scaled, columns=X_numeric.columns)
+
+# Add the cluster assignments to your scaled data
+X_scaled_df['Cluster'] = cluster_assignments
+
+# Iterate through each statistic and create individual violin plots
+for stat in X_numeric.columns:
+    # Create melted data for the current statistic
+    melted_data_stat = X_scaled_df.melt(id_vars='Cluster', value_vars=stat, var_name='Statistic', value_name='Value')
+
+    # Plot the violin plot for the current statistic
+    plt.figure(figsize=(6, 4))  # Adjust the figure size if needed
+    sns.violinplot(x='Cluster', y='Value', data=melted_data_stat, palette='Set3')
+    plt.title(f'Violin Plot for {stat}')
+    plt.xlabel('Cluster')
+    plt.ylabel('Scaled Value')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()"""
+    #this was used to generate the violin plots I threw all over the end of this paper
+```
+
+::: {layout-nrow=3}
+![](2PA.png)
+
+![](3PA.png)
+
+![](FTA.png)
+
+![](PTS.png)
+
+![](TOV.png)
+
+![](AST.png)
+:::
+
+Once we cluster this data, and look at the normalized results, we can see that there are some very distinct differences between the clusters.
