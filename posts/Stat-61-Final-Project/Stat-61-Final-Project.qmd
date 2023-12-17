@@ -8,7 +8,7 @@ image: "image.png"
 
 # Expectation Maximization
 
-The *Expectation Maximization (E-M) Algorithm* is an iterative approach to find maximum likelihood estimates for latent variables (since the things we want to maximize are only indirectly available). It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.
+The *Expectation Maximization (E-M) Algorithm* is an iterative approach to finding maximum likelihood estimates for latent variables (since the likelihoods we want to maximize are only indirectly available). It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.
 
 The unknown parameters are sometimes written as $\phi$ or $\Theta$, and we can call the latent, "nuisance," variables $J$, and the observed data $U$. So, from above, the process can be roughly seen as 
 $$ \Theta^* = \operatorname*{argmax}_{\Theta} \sum_{J\in\mathcal{J}^n} P(\Theta, J|U) $$ 
@@ -21,21 +21,22 @@ where $\phi$ is a $1\times r$ parameter vector and $t(x)$ is a $1\times r$ vecto
 
 To run the \textbf{E-M} algorithm on this example, we first enter the expectation step, and take $t^{(p)}=E[t(x)|y,\phi^{(p)}]$  with the $(p)$ denoting the $p^{th}$ cycle of the algorithm, trying to estimate the vector of sufficient statistics for the exponential distribution. 
 
-The maximization step, is then taking the equation $E[t(x)|y,\phi^{(p)}]=t^{(p)}$ and we call the solution to this equation $\phi^{(p+1)}$. We then plug in $\phi^{(p+1)}$ to the expectation step and keep iterating. 
+The maximization step, is then taking the equation $E[t(x)|y,\phi^{(p)}]=t^{(p)}$ and we call the solution to this equation $\phi^{(p+1)}$. We then plug in $\phi^{(p+1)}$ to the expectation step and keep iterating (Dempster *et al.* 1976). 
 
-This looks nice, and seems like it could work, but if you are anything like me, you might wonder how we decide when to stop. Possibly the coolest part of this algorithm is that it actually converges to a local maximum every time (Dempster *et al.* 1976). Since it always converges to a local maximum, it means that if we "guess" a decent parameter space to start off the algorithm, we will converge to what is likely to be a very solid set of estimates.
+One of the coolest parts of this algorithm is that it actually converges to a local maximum almost every time (Dempster *et al.* 1976). Dempster, Laird, and Rubin may have been slighly optimistic about how often E-M converged, due to a misuse of the triangle inequality, but C.F. Jeff Wu found and corrected that mistake, and came out with a more concrete understanding of when the algorithm converges, and to what it converges (Wu, 1983). While the algorithm may not converge to a local maximum every time, the likelihood that the parameters the algorithm optimizes each step are better estimates increases after each cycle of the algorithm. And thus, for some E-M sequence $\phi_p$, if $L(\phi_p)$ is bounded above, then E-M converges to some $L^*$.
 
-In Dempster, Laird, and Rubin's seminal paper *Maximum Likelihood via the 'EM' Algorithm*, they enumerate the process detailed above, proved the convergence, and later on, proposed that E-M could be used to in *finite clusters*. This foreshadowed the most common usage of the algorithm, clustering, or more specifically, dividing unlabeled data into nice clusters. For example, if we know that our raw data is comprised of unique groups represented by different probability distributions, we can use the E-M algorithm to change the parameters for the estimated distributions of these groups to maximize the probability that the data belongs to the proposed clustering.
+In Dempster, Laird, and Rubin's seminal paper *Maximum Likelihood via the 'EM' Algorithm*, they enumerate the process detailed above, proved the convergence, and later on, proposed that E-M could be used to in *finite clusters*. This foreshadowed the most common usage of the algorithm, clustering, or more specifically, dividing unlabeled data into nice clusters. For example, if we know that our raw data is comprised of unique groups represented by different probability distributions, we can use the E-M algorithm to systematically change the parameters for the estimated distributions of these groups to maximize the probability that the data belongs to the proposed clustering.
 
 ## Gaussian Mixture Modeling
 
-One of the most common usages of expectation maximization, and specifically clustering, is *Gaussian Mixture Modeling* (GMM) (Hasselblad 1966). This process is essentially assuming that each group you are trying to sort out is represented by a normal distribution. This is often a very convenient technique to use because things often actually do follow normal distributions because of the central limit theorem (everyone's favorite statistics theorem) and because once we have clusters that are normal, it is much easier to do inference on the clusters and talk about them with people who don't know as much about statistics because gaussian distributions are so well understood.
+One of the most common usages of expectation maximization, and specifically clustering, is *Gaussian Mixture Modeling* (GMM) (Hasselblad 1966). This process is essentially assuming that each group you are trying to sort out is represented by a multivariate normal distribution. This is often a very convenient technique to use because things often actually do follow normal distributions because of the central limit theorem and because once we have clusters that are normal, it is much easier to do inference on the clusters. In industry and other settings where statisticians have to communicate their results to non-statisticians it is also helpful to be able to talk about results in the context of normal distributions.
 
-GMMs are used to observe clusters everywhere. They are used to create customer archetypes in retail, to better understand the different ways people shop, they are used in medical scenarios in order to identify types of tumors for cancer detection. From this little sample of use cases, it is pretty obvious that this is a really powerful (and pretty cool) use for a powerful algorithm.
+GMMs are used to observe clusters everywhere. They are used to create customer archetypes in retail, to better understand the different ways people shop, they are used in medical scenarios in order to identify types of tumors for cancer detection.
 
-## Example Code
+### Example
+
 ```{python}
-#importing necessary packages
+#| echo: false
 from sklearn.mixture import GaussianMixture
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
@@ -51,9 +52,10 @@ from sklearn.decomposition import PCA
 import requests
 ```
 
-To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
+For a flavor of the effectiveness and accuracy of the algorithm, I will make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.
 
 ```{python}
+#| echo: false
 #set a random seed so that we actually get clusters that kind of look like separate clusters
 random.seed(195)
 x, _ = make_blobs(n_samples=450, centers=5, cluster_std=1.84)
@@ -62,7 +64,7 @@ plt.scatter(x[:,0], x[:,1])
 plt.show() 
 ```
 
-Now I'm going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.
+Now we fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.
 
 ```{python}
 #| output: false
@@ -87,9 +89,10 @@ gm.get_params()
  'weights_init': None} 
 ```
 
-This code here fits the model and lets it learn from the data, in the next plot, I will plot the centers that the data came up with, and then on the plot after that I will plot the boundaries for the clusters that the algorithm came up with.
+We next fit the model and let it learn from the data, in the next plot, we plot the centers that the data came up with, and on the graph after that we will color each of the clusters the algorithm identified uniquely.
 
 ```{python}
+#| echo: false
 centers = gm.means_
 plt.figure(figsize=(8, 6))
 plt.scatter(x[:,0], x[:,1], label="data")
@@ -99,6 +102,7 @@ plt.show()
 
 ```
 ```{python}
+#| echo: false
 pred = gm.predict(x)    
 
 df = pd.DataFrame({'x':x[:,0], 'y':x[:,1], 'label':pred})
@@ -112,20 +116,19 @@ ax.legend()
 plt.show() 
 ```
 
-The accuracy is really fantastic. It plots the centers exactly where I would have, and then is able to pick which dots it belongs to which groups with great accuracy. 
+The accuracy is great! This problem wasn't terribly difficult, but it is better at understanding 'groups' of things than other classification methods in statistics and similar fields. Since many situations don't have linearly separable data, like the example above, clustering models can be a great choice over other models that are useful in other situations, such as regression models (which are sometimes used for clssification in separable cases, i.e. gentoo penguin dataset).
 
-Now if we consider a dataset with millions of points and possibly hundreds or thousands of dimensions, this allows for very sensitive anomaly detection for genetic disorders by clustering genes or proteins it helps us see just how helpful this could be.
+Consider a dataset with millions of points and possibly hundreds or thousands of dimensions. E-M allows for insights in incredibly complex problems like very sensitive anomaly detection for genetic disorders by clustering genes or proteins.
 
 ## The NBA
 
 ![](nbaPic.jpeg){width="50%"}
 
-Basketball as a sport is changing. Players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position, and some teams are playing with centers who are shorter than 6'5. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players such as Kevin Durant and Kristaps Porzingis, and continued by younger players like Chet Holmgren and Victor Wembanyama.
+Basketball is changing. Players like Stephen Curry have changed perceptions around what a point guard is supposed to be, Nikola Jokic is reinventing the center position, and some teams are playing with centers who are shorter than 6'5". Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players such as Kevin Durant and Kristaps Porzingis, and continued by younger players like Chet Holmgren and Victor Wembanyama.
 
-People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don't seem to suffice, which means that we want to find new labels for positions in order to regroup players.
+People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don't seem to suffice, which means that we want to find new labels for positions in order to regroup players to better understand modern roster construction.
 
-This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e. if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.
-
+This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e. if there are more than five positions, and players are acquired and used for more specific purposes.
 ```{python}
 #| echo: false
 #| output: false
@@ -188,6 +191,7 @@ X.dropna(inplace=True)
 ```
 
 ```{python}
+#| echo: false
 n_components = np.arange(1, 15)
 models = [GaussianMixture(n, covariance_type='full', random_state=0).fit(X)
           for n in n_components]
@@ -198,11 +202,12 @@ plt.legend(loc='best')
 plt.xlabel('n_components');
 ```
 
-This code here, uses metrics *Bayesian Information Criterion* (BIC) and *Aikake Information Criterion* (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized at right around 4 clusters and AIC continues to decrease as the number of components reaches 15. The AIC is equal to $2k-2\ln(L)$ and the BIC is equal to $k\ln(n)-2\ln(L)$ where $k$ is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease. 
+This plot shows metrics *Bayesian Information Criterion* (BIC) and *Aikake Information Criterion* (AIC) plotted against the number of clusters to see which number of clusters would most likely produce the data while also penalizing overfitting. The lower the value the better fit the model is for the data. Both of the metrics are based on the likelihood function for the mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized at right around 4 clusters and AIC continues to decrease as the number of components reaches 15. The AIC is equal to $2k-2\ln(L)$ and the BIC is equal to $k\ln(n)-2\ln(L)$ where $k$ is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease. 
 
-This graph essentially says that the model that explains the data the best without overfitting is between 4 and 5 clusters, since that is where BIC is at a minimum.
+This graph essentially says that the model that explains the data the best without overfitting has 4 clusters (potentially saying that the NBA is *less* specialized than in the past).
 
 ```{python}
+#| echo: false
 model = GaussianMixture(n_components=4, random_state=0).fit(X)
 ```
 
@@ -290,18 +295,29 @@ for stat in X_numeric.columns:
     #this was used to generate the violin plots I threw all over the end of this paper
 ```
 
-::: {layout-nrow=3}
+### Results
+
+The following violin plots (which have been scaled) show the distributions for each cluster for each statistic. 
+
+::: {layout-nrow=1}
 ![](2PA.png)
 
 ![](3PA.png)
+:::
+Cluster 2 obviously attempts what looks like significantly more two point shots and three point shots. Cluster 1 attempts the second most 2 pointers while also completing the least three pointers which contrasts with Cluster 3 which attempts the least two pointers while attempting more three pointers compared to the other clusters.
 
+:::{layout-nrow=1}
 ![](FTA.png)
 
 ![](PTS.png)
+:::
 
+From the first two plots, it makes sense that Cluster 2, on average, scores the most points because they attempt the most 2PT and 3PT shots. Clusters 0 and 1 score the next most points on average, probably due to the larger number of 2PT attempts by Cluster 1 and the larger number of 3PT attempts from Cluster 0. Cluster 0 has a much larger mean number of free throws attempted while Cluster 3 has a significantly lower number of free throws attempted.
+
+This leads us to start to see a picture being painted about these players, Cluster 2 in particular has the ball a lot of the time, they score the most points, they shoot the most free throws, they are high usage players. 
+
+:::{layout-nrow=1}
 ![](TOV.png)
 
 ![](AST.png)
 :::
-
-Once we cluster this data, and look at the normalized results, we can see that there are some very distinct differences between the clusters.

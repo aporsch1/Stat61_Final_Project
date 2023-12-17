@@ -22,40 +22,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -188,107 +154,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="expectation-maximization" class="level1">
 <h1>Expectation Maximization</h1>
-<p>The <em>Expectation Maximization (E-M) Algorithm</em> is an iterative approach to find maximum likelihood estimates for latent variables (since the things we want to maximize are only indirectly available). It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.</p>
+<p>The <em>Expectation Maximization (E-M) Algorithm</em> is an iterative approach to finding maximum likelihood estimates for latent variables (since the likelihoods we want to maximize are only indirectly available). It is comprised of an estimation step, which tries to estimate the unknown variables, and a maximization step, which then tries to optimize the parameters of the model to better explain the data.</p>
 <p>The unknown parameters are sometimes written as <span class="math inline">\(\phi\)</span> or <span class="math inline">\(\Theta\)</span>, and we can call the latent, “nuisance,” variables <span class="math inline">\(J\)</span>, and the observed data <span class="math inline">\(U\)</span>. So, from above, the process can be roughly seen as <span class="math display">\[ \Theta^* = \operatorname*{argmax}_{\Theta} \sum_{J\in\mathcal{J}^n} P(\Theta, J|U) \]</span> Since this shows us maximizing the posterior probability of parameters <span class="math inline">\(\Theta\)</span> given our data and we are summing over <span class="math inline">\(J\)</span> in order to marginalize out our latent variables (Dellaert, 2002).</p>
 <p>This process was first rigorously defined on the exponential family, where the probability density functions take the form <span class="math display">\[ f(x|\phi) = b(x)\exp(\phi t(x)^T/a(\phi))\]</span></p>
 <p>where <span class="math inline">\(\phi\)</span> is a <span class="math inline">\(1\times r\)</span> parameter vector and <span class="math inline">\(t(x)\)</span> is a <span class="math inline">\(1\times r\)</span> vector of sufficient statistics for the data. Our “natural parameter” for these exponential distributions is given by some <span class="math inline">\(r\times r\)</span> linear transformation.</p>
 <p>To run the algorithm on this example, we first enter the expectation step, and take <span class="math inline">\(t^{(p)}=E[t(x)|y,\phi^{(p)}]\)</span> with the <span class="math inline">\((p)\)</span> denoting the <span class="math inline">\(p^{th}\)</span> cycle of the algorithm, trying to estimate the vector of sufficient statistics for the exponential distribution.</p>
-<p>The maximization step, is then taking the equation <span class="math inline">\(E[t(x)|y,\phi^{(p)}]=t^{(p)}\)</span> and we call the solution to this equation <span class="math inline">\(\phi^{(p+1)}\)</span>. We then plug in <span class="math inline">\(\phi^{(p+1)}\)</span> to the expectation step and keep iterating.</p>
-<p>This looks nice, and seems like it could work, but if you are anything like me, you might wonder how we decide when to stop. Possibly the coolest part of this algorithm is that it actually converges to a local maximum every time (Dempster <em>et al.</em> 1976). Since it always converges to a local maximum, it means that if we “guess” a decent parameter space to start off the algorithm, we will converge to what is likely to be a very solid set of estimates.</p>
-<p>In Dempster, Laird, and Rubin’s seminal paper <em>Maximum Likelihood via the ‘EM’ Algorithm</em>, they enumerate the process detailed above, proved the convergence, and later on, proposed that E-M could be used to in <em>finite clusters</em>. This foreshadowed the most common usage of the algorithm, clustering, or more specifically, dividing unlabeled data into nice clusters. For example, if we know that our raw data is comprised of unique groups represented by different probability distributions, we can use the E-M algorithm to change the parameters for the estimated distributions of these groups to maximize the probability that the data belongs to the proposed clustering.</p>
+<p>The maximization step, is then taking the equation <span class="math inline">\(E[t(x)|y,\phi^{(p)}]=t^{(p)}\)</span> and we call the solution to this equation <span class="math inline">\(\phi^{(p+1)}\)</span>. We then plug in <span class="math inline">\(\phi^{(p+1)}\)</span> to the expectation step and keep iterating (Dempster <em>et al.</em> 1976).</p>
+<p>One of the coolest parts of this algorithm is that it actually converges to a local maximum almost every time (Dempster <em>et al.</em> 1976). Dempster, Laird, and Rubin may have been slighly optimistic about how often E-M converged, due to a misuse of the triangle inequality, but C.F. Jeff Wu found and corrected that mistake, and came out with a more concrete understanding of when the algorithm converges, and to what it converges (Wu, 1983). While the algorithm may not converge to a local maximum every time, the likelihood that the parameters the algorithm optimizes each step are better estimates increases after each cycle of the algorithm. And thus, for some E-M sequence <span class="math inline">\(\phi_p\)</span>, if <span class="math inline">\(L(\phi_p)\)</span> is bounded above, then E-M converges to some <span class="math inline">\(L^*\)</span>.</p>
+<p>In Dempster, Laird, and Rubin’s seminal paper <em>Maximum Likelihood via the ‘EM’ Algorithm</em>, they enumerate the process detailed above, proved the convergence, and later on, proposed that E-M could be used to in <em>finite clusters</em>. This foreshadowed the most common usage of the algorithm, clustering, or more specifically, dividing unlabeled data into nice clusters. For example, if we know that our raw data is comprised of unique groups represented by different probability distributions, we can use the E-M algorithm to systematically change the parameters for the estimated distributions of these groups to maximize the probability that the data belongs to the proposed clustering.</p>
 <section id="gaussian-mixture-modeling" class="level2">
 <h2 class="anchored" data-anchor-id="gaussian-mixture-modeling">Gaussian Mixture Modeling</h2>
-<p>One of the most common usages of expectation maximization, and specifically clustering, is <em>Gaussian Mixture Modeling</em> (GMM) (Hasselblad 1966). This process is essentially assuming that each group you are trying to sort out is represented by a normal distribution. This is often a very convenient technique to use because things often actually do follow normal distributions because of the central limit theorem (everyone’s favorite statistics theorem) and because once we have clusters that are normal, it is much easier to do inference on the clusters and talk about them with people who don’t know as much about statistics because gaussian distributions are so well understood.</p>
-<p>GMMs are used to observe clusters everywhere. They are used to create customer archetypes in retail, to better understand the different ways people shop, they are used in medical scenarios in order to identify types of tumors for cancer detection. From this little sample of use cases, it is pretty obvious that this is a really powerful (and pretty cool) use for a powerful algorithm.</p>
-</section>
-<section id="example-code" class="level2">
-<h2 class="anchored" data-anchor-id="example-code">Example Code</h2>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#importing necessary packages</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.mixture <span class="im">import</span> GaussianMixture</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> random</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score, silhouette_samples</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>To show how effective this algorithm can be, I am going to make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.</p>
+<p>One of the most common usages of expectation maximization, and specifically clustering, is <em>Gaussian Mixture Modeling</em> (GMM) (Hasselblad 1966). This process is essentially assuming that each group you are trying to sort out is represented by a multivariate normal distribution. This is often a very convenient technique to use because things often actually do follow normal distributions because of the central limit theorem and because once we have clusters that are normal, it is much easier to do inference on the clusters. In industry and other settings where statisticians have to communicate their results to non-statisticians it is also helpful to be able to talk about results in the context of normal distributions.</p>
+<p>GMMs are used to observe clusters everywhere. They are used to create customer archetypes in retail, to better understand the different ways people shop, they are used in medical scenarios in order to identify types of tumors for cancer detection.</p>
+<section id="example" class="level3">
+<h3 class="anchored" data-anchor-id="example">Example</h3>
+<p>For a flavor of the effectiveness and accuracy of the algorithm, I will make a set of five blobs of data, each with a center, and then I will show how accurately the algorithm can cluster the data into the blobs that created the underlying data.</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#set a random seed so that we actually get clusters that kind of look like separate clusters</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>random.seed(<span class="dv">195</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>x, _ <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">450</span>, centers<span class="op">=</span><span class="dv">5</span>, cluster_std<span class="op">=</span><span class="fl">1.84</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(x[:,<span class="dv">0</span>], x[:,<span class="dv">1</span>])</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>plt.show() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="Stat-61-Final-Project_files/figure-html/cell-3-output-1.png" width="652" height="485"></p>
 </div>
 </div>
-<p>Now I’m going to fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
-<p>This code here fits the model and lets it learn from the data, in the next plot, I will plot the centers that the data came up with, and then on the plot after that I will plot the boundaries for the clusters that the algorithm came up with.</p>
+<p>Now we fit the algorithm with the prior understanding that the data is made of five clusters of approximately normal data.</p>
+<p>We next fit the model and let it learn from the data, in the next plot, we plot the centers that the data came up with, and on the graph after that we will color each of the clusters the algorithm identified uniquely.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>centers <span class="op">=</span> gm.means_</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(x[:,<span class="dv">0</span>], x[:,<span class="dv">1</span>], label<span class="op">=</span><span class="st">"data"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.scatter(centers[:,<span class="dv">0</span>], centers[:,<span class="dv">1</span>],c<span class="op">=</span><span class="st">'r'</span>, label<span class="op">=</span><span class="st">"centers"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.show() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="Stat-61-Final-Project_files/figure-html/cell-5-output-1.png" width="652" height="485"></p>
 </div>
 </div>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> gm.predict(x)    </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>:x[:,<span class="dv">0</span>], <span class="st">'y'</span>:x[:,<span class="dv">1</span>], <span class="st">'label'</span>:pred})</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> df.groupby(<span class="st">'label'</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, group <span class="kw">in</span> groups:</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ax.scatter(group.x, group.y, label<span class="op">=</span>name)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>plt.show() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="Stat-61-Final-Project_files/figure-html/cell-6-output-1.png" width="578" height="411"></p>
 </div>
 </div>
-<p>The accuracy is really fantastic. It plots the centers exactly where I would have, and then is able to pick which dots it belongs to which groups with great accuracy.</p>
-<p>Now if we consider a dataset with millions of points and possibly hundreds or thousands of dimensions, this allows for very sensitive anomaly detection for genetic disorders by clustering genes or proteins it helps us see just how helpful this could be.</p>
+<p>The accuracy is great! This problem wasn’t terribly difficult, but it is better at understanding ‘groups’ of things than other classification methods in statistics and similar fields. Since many situations don’t have linearly separable data, like the example above, clustering models can be a great choice over other models that are useful in other situations, such as regression models (which are sometimes used for clssification in separable cases, i.e.&nbsp;gentoo penguin dataset).</p>
+<p>Consider a dataset with millions of points and possibly hundreds or thousands of dimensions. E-M allows for insights in incredibly complex problems like very sensitive anomaly detection for genetic disorders by clustering genes or proteins.</p>
+</section>
 </section>
 <section id="the-nba" class="level2">
 <h2 class="anchored" data-anchor-id="the-nba">The NBA</h2>
 <p><img src="nbaPic.jpeg" class="img-fluid" style="width:50.0%"></p>
-<p>Basketball as a sport is changing. Players like Stephen Curry have changed perceptions around what a point guard is supposed to do, Nikola Jokic is reinventing the center position, and some teams are playing with centers who are shorter than 6’5. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players such as Kevin Durant and Kristaps Porzingis, and continued by younger players like Chet Holmgren and Victor Wembanyama.</p>
-<p>People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don’t seem to suffice, which means that we want to find new labels for positions in order to regroup players.</p>
-<p>This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e.&nbsp;if there are more than five positions, and players are acquired and used for more specific purposes than in the past. To answer these questions, even just a little bit, I plan on clustering players from the 2022 season (stats acquired from Basketball Reference) and answering my first question using that data and model, and then taking in data from the 1986 season (that was fun and long enough ago to measure change) and looking at the difference in number of clusters for those seasons.</p>
+<p>Basketball is changing. Players like Stephen Curry have changed perceptions around what a point guard is supposed to be, Nikola Jokic is reinventing the center position, and some teams are playing with centers who are shorter than 6’5”. Another even bigger change is the advent of extremely tall players playing seemingly positionless basketball, the trend started by players such as Kevin Durant and Kristaps Porzingis, and continued by younger players like Chet Holmgren and Victor Wembanyama.</p>
+<p>People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don’t seem to suffice, which means that we want to find new labels for positions in order to regroup players to better understand modern roster construction.</p>
+<p>This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e.&nbsp;if there are more than five positions, and players are acquired and used for more specific purposes.</p>
 <p>There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.</p>
 <p>So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e.&nbsp;those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons.</p>
 <div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_components <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">15</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [GaussianMixture(n, covariance_type<span class="op">=</span><span class="st">'full'</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> n <span class="kw">in</span> n_components]</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.plot(n_components, [m.bic(X) <span class="cf">for</span> m <span class="kw">in</span> models], label<span class="op">=</span><span class="st">'BIC'</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.plot(n_components, [m.aic(X) <span class="cf">for</span> m <span class="kw">in</span> models], label<span class="op">=</span><span class="st">'AIC'</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'best'</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'n_components'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="Stat-61-Final-Project_files/figure-html/cell-11-output-1.png" width="603" height="429"></p>
 </div>
 </div>
-<p>This code here, uses metrics <em>Bayesian Information Criterion</em> (BIC) and <em>Aikake Information Criterion</em> (AIC), to see which number of clusters would best tell us about the data. The lower the value the better. Both of the metrics are based on the likelihood function for the potential mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized at right around 4 clusters and AIC continues to decrease as the number of components reaches 15. The AIC is equal to <span class="math inline">\(2k-2\ln(L)\)</span> and the BIC is equal to <span class="math inline">\(k\ln(n)-2\ln(L)\)</span> where <span class="math inline">\(k\)</span> is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease.</p>
-<p>This graph essentially says that the model that explains the data the best without overfitting is between 4 and 5 clusters, since that is where BIC is at a minimum.</p>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GaussianMixture(n_components<span class="op">=</span><span class="dv">4</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>This plot shows metrics <em>Bayesian Information Criterion</em> (BIC) and <em>Aikake Information Criterion</em> (AIC) plotted against the number of clusters to see which number of clusters would most likely produce the data while also penalizing overfitting. The lower the value the better fit the model is for the data. Both of the metrics are based on the likelihood function for the mixture models and the main difference between them is that BIC punishes models with more parameters more than AIC, as we can see from the plot, since the BIC is minimized at right around 4 clusters and AIC continues to decrease as the number of components reaches 15. The AIC is equal to <span class="math inline">\(2k-2\ln(L)\)</span> and the BIC is equal to <span class="math inline">\(k\ln(n)-2\ln(L)\)</span> where <span class="math inline">\(k\)</span> is the number of parameters. So as the likelihood that the model proposed (dependent on the number of clusters) has a higher likelihood of explaining the data, the AIC and BIC both decrease.</p>
+<p>This graph essentially says that the model that explains the data the best without overfitting has 4 clusters (potentially saying that the NBA is <em>less</em> specialized than in the past).</p>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p>The following violin plots (which have been scaled) show the distributions for each cluster for each statistic.</p>
 <div class="quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
@@ -298,6 +217,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="3PA.png" class="img-fluid"></p>
 </div>
 </div>
+</div>
+<p>Cluster 2 obviously attempts what looks like significantly more two point shots and three point shots. Cluster 1 attempts the second most 2 pointers while also completing the least three pointers which contrasts with Cluster 3 which attempts the least two pointers while attempting more three pointers compared to the other clusters.</p>
+<div class="quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img src="FTA.png" class="img-fluid"></p>
@@ -306,6 +228,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="PTS.png" class="img-fluid"></p>
 </div>
 </div>
+</div>
+<p>From the first two plots, it makes sense that Cluster 2, on average, scores the most points because they attempt the most 2PT and 3PT shots. Clusters 0 and 1 score the next most points on average, probably due to the larger number of 2PT attempts by Cluster 1 and the larger number of 3PT attempts from Cluster 0. Cluster 0 has a much larger mean number of free throws attempted while Cluster 3 has a significantly lower number of free throws attempted.</p>
+<p>This leads us to start to see a picture being painted about these players, Cluster 2 in particular has the ball a lot of the time, they score the most points, they shoot the most free throws, this means they are getting fouled more.</p>
+<div class="quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img src="TOV.png" class="img-fluid"></p>
@@ -315,9 +241,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Once we cluster this data, and look at the normalized results, we can see that there are some very distinct differences between the clusters.</p>
 
 
+</section>
 </section>
 </section>
 
