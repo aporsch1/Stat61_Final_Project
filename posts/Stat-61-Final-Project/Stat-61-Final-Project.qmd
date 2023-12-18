@@ -117,7 +117,7 @@ ax.legend()
 plt.show() 
 ```
 
-The accuracy is great! This problem wasn't terribly difficult, but it is better at understanding 'groups' of things than other classification methods in statistics and similar fields. Since many situations don't have linearly separable data, like the example above, clustering models can be a great choice over other models that are useful in other situations, such as regression models (which are sometimes used for clssification in separable cases, i.e. gentoo penguin dataset).
+The accuracy is great! This problem wasn't terribly difficult, but it is better at understanding 'groups' of things than other classification methods in statistics and similar fields. Since many situations don't have linearly separable data, like the example above, clustering models can be a great choice over other models that are useful in other situations, such as regression models (which are sometimes used for classification in separable cases, i.e. gentoo penguin dataset).
 
 Consider a dataset with millions of points and possibly hundreds or thousands of dimensions. E-M allows for insights in incredibly complex problems like very sensitive anomaly detection for genetic disorders by clustering genes or proteins.
 
@@ -174,7 +174,7 @@ There are a few instances of the same player showing multiple times in the dataf
 df=df.drop(columns=['Age', 'G', 'GS', '2P', '3P', 'TRB', 'FT','PF', 'FG', 'MP'], axis=1)
 ```
 
-So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e. those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 alone, which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons (2017-2022).
+So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e. those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian, since there are over eight hundred players that played in 2022 alone, which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons (2017-2022).
 
 ```{python}
 #| echo: false
