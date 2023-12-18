@@ -49,6 +49,7 @@ from bs4 import BeautifulSoup
 import seaborn as sns 
 from sklearn.metrics import silhouette_score, silhouette_samples
 from sklearn.decomposition import PCA
+from sklearn.metrics import pairwise_distances_argmin_min
 import requests
 ```
 
@@ -179,15 +180,12 @@ So now that we have this data, I will take all of the features besides position,
 #| echo: false
 #| output: false
 X = df.copy(deep=True)
-X = X.drop("Player", axis = 1)
-```
 
-```{python}
-#| echo: false
-#| output: false
 X.replace('', np.nan, inplace=True)
 # Drop rows with NaN values
 X.dropna(inplace=True)
+names = X["Player"]
+X = X.drop("Player", axis = 1)
 ```
 
 ```{python}
@@ -215,8 +213,9 @@ model = GaussianMixture(n_components=4, random_state=0).fit(X)
 #| echo: false
 #| output: false
 preds = pd.Series(model.predict(X))
-X["Cluster"] = preds
-X.dropna()
+X["Cluster"] = preds.values
+X["Name"] = names
+Z = X.copy(deep=True)
 ```
 
 ```{python}
@@ -321,3 +320,22 @@ This leads us to start to see a picture being painted about these players, Clust
 
 ![](AST.png)
 :::
+
+Cluster 2 also has the most turnovers on average, 
+
+
+
+
+
+
+```{python}
+closest_players_indices, _ = pairwise_distances_argmin_min(X_scaled, cluster_centers)
+
+# Assuming 'X' has a 'Player' column
+closest_players = X.loc[closest_players_indices]
+
+# Print the players closest to each cluster center
+for i, player_index in enumerate(closest_players_indices):
+    player_name = X.loc[player_index, 'Player']
+    print(f"Cluster {i} Center: Player with stats closest: {player_name}")
+```
