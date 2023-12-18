@@ -216,26 +216,9 @@ preds = pd.Series(model.predict(X))
 X["Cluster"] = preds.values
 X["Name"] = names
 Z = X.copy(deep=True)
+Z = Z.drop(['Name', 'Cluster'], axis = 1)
 ```
 
-```{python}
-#| echo: false
-#| output: false
-Y = X.drop('Cluster', axis = 1)
-cluster_assignments = model.predict(Y)
-
-# Get the cluster centers from the fitted model
-cluster_centers = model.means_  # This will give the centers of each cluster
-
-# Calculate distances between each player and the cluster centers
-distances_to_centers = np.linalg.norm(Y - cluster_centers[cluster_assignments], axis=1)
-
-# Find the indices of players closest to each cluster center
-closest_players_indices = np.argmin(distances_to_centers, axis=0)
-
-# Get the details of players closest to each cluster center
-closest_players = Y.iloc[closest_players_indices]
-```
 ```{python}
 #| echo: false
 #| output: false
@@ -249,7 +232,7 @@ X_scaled = scaler.fit_transform(X_numeric)
 X_scaled_df = pd.DataFrame(X_scaled, columns=X_numeric.columns)
 
 # Add the cluster assignments to your scaled data
-X_scaled_df['Cluster'] = cluster_assignments
+X_scaled_df['Cluster'] = preds.values
 
 # Melt the DataFrame to create a long-form dataset for violin plot
 melted_data_scaled = X_scaled_df.melt(id_vars='Cluster', var_name='Statistic', value_name='Value')
@@ -265,7 +248,7 @@ plt.show()
 ```{python}
 #| echo: false
 #| output: false
-"""X_numeric = X.select_dtypes(include='number')
+X_numeric = X.select_dtypes(include='number')
 
 # Scale the numeric columns
 scaler = StandardScaler()
@@ -275,7 +258,7 @@ X_scaled = scaler.fit_transform(X_numeric)
 X_scaled_df = pd.DataFrame(X_scaled, columns=X_numeric.columns)
 
 # Add the cluster assignments to your scaled data
-X_scaled_df['Cluster'] = cluster_assignments
+X_scaled_df['Cluster'] = preds.values
 
 # Iterate through each statistic and create individual violin plots
 for stat in X_numeric.columns:
@@ -290,7 +273,7 @@ for stat in X_numeric.columns:
     plt.ylabel('Scaled Value')
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.show()"""
+    plt.show()
     #this was used to generate the violin plots I threw all over the end of this paper
 ```
 
