@@ -335,7 +335,3 @@ Murphy, K. P. (2022). Probabilistic Machine Learning: An introduction. MIT Press
 Wu, C. F. Jeff. “On the Convergence Properties of the EM Algorithm.” The Annals of Statistics, vol. 11, no. 1, 1 Mar. 1983, https://doi.org/10.1214/aos/1176346060. Accessed 17 Jan. 2022.
 
 Victor Hasselblad (1966) Estimation of Parameters for a Mixture of Normal Distributions, Technometrics, 8:3, 431-444, DOI: 10.1080/00401706.1966.10490375
-
-
-
-
