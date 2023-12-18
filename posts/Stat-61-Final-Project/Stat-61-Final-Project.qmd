@@ -174,7 +174,7 @@ There are a few instances of the same player showing multiple times in the dataf
 df=df.drop(columns=['Age', 'G', 'GS', '2P', '3P', 'TRB', 'FT','PF', 'FG', 'MP'], axis=1)
 ```
 
-So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e. those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons.
+So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e. those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 alone, which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons (2017-2022).
 
 ```{python}
 #| echo: false
