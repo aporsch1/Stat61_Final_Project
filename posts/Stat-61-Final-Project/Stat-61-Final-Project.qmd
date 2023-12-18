@@ -325,7 +325,6 @@ Using common model fit measures like BIC and AIC we can see that the GMM approac
 My code for this post can be found at my [Github](https://github.com/aporsch1/Stat61_Final_Project/tree/main)
 
 ### References
-
 Dellaert, Frank. “The Expectation Maximization Algorithm - Web.Itu.Edu.Tr.” Georgia Tech, 2002, web.itu.edu.tr/~sgunduz/courses/verimaden/paper/em-paper.pdf. 
 
 Dempster, Arthur P, et al. “Maximum Likelihood from Incomplete Data via the EM Algorithm.” Harvard.edu, 2022, dash.harvard.edu/handle/1/3426318, http://nrs.harvard.edu/urn-3:HUL.InstRepos:3426318. Accessed 18 Dec. 2023.

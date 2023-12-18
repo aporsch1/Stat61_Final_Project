@@ -181,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="Stat-61-Final-Project_files/figure-html/cell-6-output-1.png" width="578" height="411"></p>
 </div>
 </div>
-<p>The accuracy is great! This problem wasn’t terribly difficult, but it is better at understanding ‘groups’ of things than other classification methods in statistics and similar fields. Since many situations don’t have linearly separable data, like the example above, clustering models can be a great choice over other models that are useful in other situations, such as regression models (which are sometimes used for clssification in separable cases, i.e.&nbsp;gentoo penguin dataset).</p>
+<p>The accuracy is great! This problem wasn’t terribly difficult, but it is better at understanding ‘groups’ of things than other classification methods in statistics and similar fields. Since many situations don’t have linearly separable data, like the example above, clustering models can be a great choice over other models that are useful in other situations, such as regression models (which are sometimes used for classification in separable cases, i.e.&nbsp;gentoo penguin dataset).</p>
 <p>Consider a dataset with millions of points and possibly hundreds or thousands of dimensions. E-M allows for insights in incredibly complex problems like very sensitive anomaly detection for genetic disorders by clustering genes or proteins.</p>
 </section>
 </section>
@@ -192,7 +192,7 @@ ul.task-list li input[type="checkbox"] {
 <p>People are playing basketball differently. To effectively understand the game, the old labels of point guard, shooting guard, center, power forward, and small forward don’t seem to suffice, which means that we want to find new labels for positions in order to regroup players to better understand modern roster construction.</p>
 <p>This seems to be a problem uniquely well suited to clustering. I plan on looking at a few things, how the clusters of players in the modern NBA compare to the positions that players are assigned to. Secondly, I am curious if the NBA has become more specialized, i.e.&nbsp;if there are more than five positions, and players are acquired and used for more specific purposes.</p>
 <p>There are a few instances of the same player showing multiple times in the dataframe since people were traded and played for different teams throughout the season, so I took the averages of all of their values to create a set of stats for the season for them.</p>
-<p>So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e.&nbsp;those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian since there are over eight hundred players that played in 2022 which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons.</p>
+<p>So now that we have this data, I will take all of the features besides position, age, team, games played, games started (As well as some irrelevant features, i.e.&nbsp;those that are just linear combinations of other features) and will use them to create clusters so we can start to draw some conclusions. We should feel pretty good about modeling the clusters as gaussian, since there are over eight hundred players that played in 2022 alone, which means we should feel alright about assuming normality across each predictor, especially since we have data across 6 seasons (2017-2022).</p>
 <div class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <p><img src="Stat-61-Final-Project_files/figure-html/cell-10-output-1.png" width="603" height="429"></p>
@@ -256,6 +256,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Dellaert, Frank. “The Expectation Maximization Algorithm - Web.Itu.Edu.Tr.” Georgia Tech, 2002, web.itu.edu.tr/~sgunduz/courses/verimaden/paper/em-paper.pdf.</p>
 <p>Dempster, Arthur P, et al.&nbsp;“Maximum Likelihood from Incomplete Data via the EM Algorithm.” Harvard.edu, 2022, dash.harvard.edu/handle/1/3426318, http://nrs.harvard.edu/urn-3:HUL.InstRepos:3426318. Accessed 18 Dec.&nbsp;2023.</p>
 <p>Murphy, K. P. (2022). Probabilistic Machine Learning: An introduction. MIT Press.</p>
+<p>Wu, C. F. Jeff. “On the Convergence Properties of the EM Algorithm.” The Annals of Statistics, vol.&nbsp;11, no. 1, 1 Mar.&nbsp;1983, https://doi.org/10.1214/aos/1176346060. Accessed 17 Jan.&nbsp;2022.</p>
+<p>Victor Hasselblad (1966) Estimation of Parameters for a Mixture of Normal Distributions, Technometrics, 8:3, 431-444, DOI: 10.1080/00401706.1966.10490375</p>
 
 
 </section>
