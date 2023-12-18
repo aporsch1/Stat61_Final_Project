@@ -248,12 +248,13 @@ plt.show()
 ```{python}
 #| echo: false
 #| output: false
+cluster_centers = model.means_
 X_numeric = X.select_dtypes(include='number')
+X_numeric = X_numeric.drop('Cluster', axis = 1)
 
 # Scale the numeric columns
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X_numeric)
-
 # Convert back to DataFrame (keeping the column names)
 X_scaled_df = pd.DataFrame(X_scaled, columns=X_numeric.columns)
 
@@ -276,6 +277,7 @@ for stat in X_numeric.columns:
     plt.show()
     #this was used to generate the violin plots I threw all over the end of this paper
 ```
+
 
 ### Results
 
@@ -312,6 +314,8 @@ Cluster 2 also has the most turnovers on average,
 
 
 ```{python}
+#| echo: false
+#| output: false
 closest_players_indices, _ = pairwise_distances_argmin_min(X_scaled, cluster_centers)
 
 # Assuming 'X' has a 'Player' column
