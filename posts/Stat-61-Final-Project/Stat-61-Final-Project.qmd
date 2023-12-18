@@ -306,23 +306,26 @@ This leads us to start to see a picture being painted about these players, Clust
 ![](AST.png)
 :::
 
-Cluster 2 also has the most turnovers on average, 
+Cluster 2 also has the most turnovers on average, while Cluster 3 commits considerably fewer average turnovers. Clusters 1 and 3 have the fewest average assists and Cluster 0 falls somewhere in between 0 and 2. 
+
+Another way we can better understand these clusters is see which players are most representative of each cluster, letting us use domain knowledge about the sport to draw further conclusions about how players get sorted into clusters. We just use the smallest distance between the point for each cluster's center, and any given player in the set. 
+
+For cluster 0, the player closest to the center is Patty Mills, while he is not a huge star, he is known for being a great supporting player, and even later in his career coming off the bench to add quick points. This helps us validate our violin plots, since he is the closest player to the center of the cluster, we can assume that he is relatively close to the center of each of the marginal normal distributions for each statistic, he doesn't take a lot of shots since he is playing a more supportive role, but since he is coming in to try and score quickly he is shooting more threes than twos and since players like Mills are usually primarily shooters, they won't attempt as many foul shots, since they aren't attempting as many 2 points shots near the rim. Other players in this cluster include Seth Curry, Shake Milton, and Bruce Brown (who embodied this role perfectly in last springs championship run). This is the most common cluster for players to fall into (out of players in the last 6 seasons).
+
+The center of Cluster 1 is Robin Lopez, the less famous brother of another member of Cluster 1, Brook Lopez. These players are essentially the classical center, they rebound more than anyone else, they take far more twos than threes, they don't assist much, they take more foul shots since they get fouled near the rim. This is by a considerable margin, the smallest cluster. It seems fair to postulate that this is because of their lack of shooting ability, but there is still a significant number of players that play this position.
+
+For Cluster 2, the center of this cluster is Chris Paul. He is a perfect example of this type of player, while he doesn't score as much as other members of this cluster (Jokic, Steph Curry, Luka Doncic among them) he plays with a high usage rate and gets everything done for his team, he assists, he shoots, he rebounds, he draws fouls. These players are almost all guards and forwards and are usually the 'franchise player.' This is the second smallest cluster, probably due to the fact that teams can only have one or two players that really dominate possession and also due to the fact that it is quite difficult to be a player even comparable to Chris Paul and Stephen Curry.
+
+Cluster 3's center is Duncan Robinson, a rare liberal arts college baller. These are players who play low minutes, and their only job is to shoot threes and play some defense. These guys are not expected to generate assists or rebounds. Another good example of a player in this cluster is PJ Tucker, who has never averaged too many points but has continually shot three pointers with high accuracy and is known for his strong defensive play. This is the second largest cluster out of current players, presumably because of the transition to more three point focused offenses that started in the early-mid 2010s.
+
+![Duncan Robinson before he took his talents to South Beach](Duncan_Robinson.jpeg)
+
+Using common model fit measures like BIC and AIC we can see that the GMM approach fits the task of clustering NBA players. We can also see that a set of four clusters can explain the approximate roles of players through statistics rather than what sometimes falls to heuristics. I also find it interesting that the best number of clusters was *less* than 5, instead of more than 5. I had suspected that the NBA had become more specialized, which could possibly still be true, but there are still fewer positions. Which seems to bring us to the conclusion that either players are being asked to handle a broader range of assignments on court, the game has changed such that there are fewer things that coaches need players to do on court, and they are just asked to specialize on those things, or that any other specialization that players have to do beyond the clusters that we identified is actually on the defensive end, which is much harder to measure statistically.
+
+My code for this post can be found at my [Github](https://github.com/aporsch1/Stat61_Final_Project/tree/main)
 
 
 
 
 
 
-```{python}
-#| echo: false
-#| output: false
-closest_players_indices, _ = pairwise_distances_argmin_min(X_scaled, cluster_centers)
-
-# Assuming 'X' has a 'Player' column
-closest_players = X.loc[closest_players_indices]
-
-# Print the players closest to each cluster center
-for i, player_index in enumerate(closest_players_indices):
-    player_name = X.loc[player_index, 'Player']
-    print(f"Cluster {i} Center: Player with stats closest: {player_name}")
-```
