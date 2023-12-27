@@ -1,0 +1,11 @@
+{
+  "hash": "7c5b3088b45faccb190fed10331402bb",
+  "result": {
+    "markdown": "---\ntitle: \"Movie Recommendation Systems\"\nauthor: \"Abraham Porschet\"\ndate: \"2023-12-27\"\ncategories: [code, analysis]\nimage: \"titleImage.jpeg\"\n---\n\n![](1188.jpg.webp){}\n\nI *love* movies. Now, as a preface to this, the best movie recommendation system is to walk up to me, or your favorite film professor at your local college, and tell them a few of your favorite movies and then ask for some recommendations. But beyond this, we sometimes have to settle for machine learning algorithms to tell us when to watch next.\n\nI have some machine learning models to thank for recommending me *Psych* (during covid too, it was a great time), and *Fair Play* this last fall (if you haven't seen *Fair Play*, you need to watch *Fair Play*).\n\nMy goal is to learn about how recommender systems work on a lower level, since on a higher level I can think of a few ways to make a recommender system (not that they would work well). The first thing I thought of was establishing a notion of distance between movies using specific features, and then recommend the movies closest in distance to the movies they have rated the highest. That would be interesting but wouldn't do very well at finding them movies in genres that people don't generally watch and could definitely keep people watching the same sort of stuff over and over again. There is also the neural network option, which almost always provides results close to the top of the heap in situations similar to these. But, in the spirit of full disclosure, I am at home right now working on my macbook air, and am not confident that any model would be done training by the time it was time for me headed back to school.\n\n::: {.cell execution_count=1}\n``` {.python .cell-code}\nimport pandas as pd\nimport numpy as numpy\n```\n:::\n\n\n",
+    "supporting": [
+      "movieRecommendations_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
