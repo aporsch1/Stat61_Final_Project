@@ -13,4 +13,4 @@ about:
 
 ---
 
-Stat and CS student at Swarthmore College
+Stat and CS student at Swarthmore College | Aspiring Data Scientist and ML Engineer
