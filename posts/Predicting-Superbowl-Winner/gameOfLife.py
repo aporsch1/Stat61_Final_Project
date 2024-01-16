@@ -1,49 +1,13 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import random
-import time
-from os import system, name
+
+def initialize_grid(size):
+    return np.random.choice([0, 1], size=(size, size))
 
 def dead_state(rows, cols):
     """creates a 'dead' array consisting of all zeroes from dimensions given in arguments"""
     state = [[0 for i in range(cols)] for j in range(rows)]
     return state
-
-
-def random_state(rows, cols):
-    """alters a given array by giving each value a randomized value, either a zero or one"""
-    state = dead_state(rows, cols)
-    for i in range(rows):
-        for j in range(cols):
-            random_number = random.random()
-            if random_number >= .5:
-                random_number = 0
-            else:
-                random_number = 1
-            state[i][j] = random_number
-    return state
-
-
-def render(state):
-    """prints out given array in a readable manner"""
-    cols = len(state[1])
-    rows = len(state)
-    display_state = dead_state(rows, cols)
-    for i in range(rows):
-        for j in range(cols):
-            if state[i][j] == 0:
-                display_state[i][j] = "   "
-            else:
-                display_state[i][j] = " @ "
-
-    for i in range(rows):
-        string = ""
-        for j in range(cols):
-            string = string + display_state[i][j]
-            if j == cols-1:
-                print(string)
-
 
 def get_neighbors(state, x, y):
     """given an array and coordinates for a cell, finds if that cell should be 1 or 0"""
@@ -90,5 +54,20 @@ def play_gol(old_state):
 def clear():
  
     _ = system('clear')
+    
+    
+def create_heatmap(grid):
+    plt.imshow(grid, cmap='hot', interpolation='nearest')
+    plt.colorbar()
+    plt.show()
+    
+def main():
+    initial_state = initialize_grid(75)
+    next_state = initial_state
+    while True:
+        next_state = play_gol(next_state)
+        time.sleep(0.05)
+        clear()
 
 
+main()
