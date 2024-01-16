@@ -1,5 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time
+from os import system
+
+#TODO create updating grid separate from the game grid that keeps track of where cells are alive.
 
 def initialize_grid(size):
     return np.random.choice([0, 1], size=(size, size))
@@ -66,8 +70,6 @@ def main():
     next_state = initial_state
     while True:
         next_state = play_gol(next_state)
-        time.sleep(0.05)
-        clear()
 
 
 main()
