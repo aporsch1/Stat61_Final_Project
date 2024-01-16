@@ -16,5 +16,8 @@
   },
   "posts/Movie-Recommending/movieRecommendations.qmd": {
     "movieRecommendations.html": "dc509c07"
+  },
+  "posts/Predicting-Superbowl-Winner/Predicting-SB.qmd": {
+    "Predicting-SB.html": "8c72f7ea"
   }
 }

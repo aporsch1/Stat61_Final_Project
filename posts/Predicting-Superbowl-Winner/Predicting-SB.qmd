@@ -1,0 +1,15 @@
+---
+title: "Predicting American Football Winners"
+author: "Abraham Porschet"
+date: "2024-01-15"
+categories: [code, analysis]
+image: "image.jpeg"
+---
+
+# The NFL
+
+The NFL is a violent, irresponsible, and probably unethical sport to play and watch. This all makes it completely irresistable. With 53 players on each team, intricate play structures and complicated (and inconsistent) refereeing, winning in the NFL is not straightforward and predicting who wins an NFL game is quite complicated as well. The Superbowl, the spectacle that glorifies and epitomizes the sport is in about a month, so I have decided to try and model the outcome of the next few playoff games in an effort to predict the odds of a team winning the superbowl (hopefully deluding myself into thinking that the Bills can win the whole thing).
+
+# Data Retrieval
+
+There is a lot of data flying around every play of every football game. There are plenty of advanced stats and measurements that say how many yards away from the receiever the closest defender and all sorts of things like that which is fairly overwhelming. Which is why it is almost nice that a lot of that data is held behind *NFL Next Gen Stats* with AWS, making the data unavailable to me, leading me to use more of the pedestrian stats available to me from Pro Football Reference which makes things much less strenuous for my poor MacBook Air.

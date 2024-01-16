@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "Stat and CS student at Swarthmore College"
+    "text": "Stat and CS student at Swarthmore College | Aspiring Data Scientist and ML Engineer"
   },
   {
     "objectID": "posts/Stat-61-Final-Project/Stat-61-Final-Project.html",
@@ -32,7 +32,7 @@
     "href": "index.html",
     "title": "Posts",
     "section": "",
-    "text": "Movie Recommendation Systems\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nDec 27, 2023\n\n\nAbraham Porschet\n\n\n\n\n\n\n  \n\n\n\n\nGaussian Mixture Models and Expectation-Maximization\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nDec 10, 2023\n\n\nAbraham Porschet\n\n\n\n\n\n\nNo matching items"
+    "text": "Predicting American Football Winners\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nJan 15, 2024\n\n\nAbraham Porschet\n\n\n\n\n\n\n  \n\n\n\n\nGaussian Mixture Models and Expectation-Maximization\n\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nDec 10, 2023\n\n\nAbraham Porschet\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/Movie-Recommending/movieRecommendations.html",
@@ -40,5 +40,12 @@
     "title": "Movie Recommendation Systems",
     "section": "",
     "text": "I love movies. Now, as a preface to this, the best movie recommendation system is to walk up to me, or your favorite film professor at your local college, and tell them a few of your favorite movies and then ask for some recommendations. But beyond this, we sometimes have to settle for machine learning algorithms to tell us when to watch next.\nI have some machine learning models to thank for recommending me Psych (during covid too, it was a great time), and Fair Play this last fall (if you haven’t seen Fair Play, you need to watch Fair Play).\nMy goal is to learn about how recommender systems work on a lower level, since on a higher level I can think of a few ways to make a recommender system (not that they would work well). The first thing I thought of was establishing a notion of distance between movies using specific features, and then recommend the movies closest in distance to the movies they have rated the highest. That would be interesting but wouldn’t do very well at finding them movies in genres that people don’t generally watch and could definitely keep people watching the same sort of stuff over and over again. There is also the neural network option, which almost always provides results close to the top of the heap in situations similar to these. But, in the spirit of full disclosure, I am at home right now working on my macbook air, and am not confident that any model would be done training by the time it was time for me headed back to school.\n\nimport pandas as pd\nimport numpy as numpy"
+  },
+  {
+    "objectID": "posts/Predicting-Superbowl-Winner/Predicting-SB.html",
+    "href": "posts/Predicting-Superbowl-Winner/Predicting-SB.html",
+    "title": "Predicting American Football Winners",
+    "section": "",
+    "text": "The NFL\nThe NFL is a violent, irresponsible, and probably unethical sport to play and watch. This all makes it completely irresistable. With 53 players on each team, intricate play structures and complicated (and inconsistent) refereeing, winning in the NFL is not straightforward and predicting who wins an NFL game is quite complicated as well. The Superbowl, the spectacle that glorifies and epitomizes the sport is in about a month, so I have decided to try and model the outcome of the next few playoff games in an effort to predict the odds of a team winning the superbowl (hopefully deluding myself into thinking that the Bills can win the whole thing).\n\n\nData Retrieval\nThere is a lot of data flying around every play of every football game. There are plenty of advanced stats and measurements that say how many yards away from the receiever the closest defender and all sorts of things like that which is fairly overwhelming. Which is why it is almost nice that a lot of that data is held behind NFL Next Gen Stats with AWS, making the data unavailable to me, leading me to use more of the pedestrian stats available to me from Pro Football Reference which makes things much less strenuous for my poor MacBook Air."
   }
 ]
