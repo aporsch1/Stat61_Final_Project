@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import time
+from matplotlib.colors import LogNorm
 from os import system
 
 #TODO create updating grid separate from the game grid that keeps track of where cells are alive.
@@ -61,15 +61,19 @@ def clear():
     
     
 def create_heatmap(grid):
-    plt.imshow(grid, cmap='hot', interpolation='nearest')
-    plt.colorbar()
+    plt.imshow(grid, cmap='viridis', interpolation='nearest')
+    plt.colorbar(label='Lifetime')
+    plt.title('Game of Life Heatmap')
     plt.show()
     
 def main():
     initial_state = initialize_grid(75)
+    heat_grid = initial_state.copy()
     next_state = initial_state
-    while True:
+    for i in range(15000):
         next_state = play_gol(next_state)
+        heat_grid += next_state
+    create_heatmap(heat_grid)
 
 
 main()

@@ -3,6 +3,6 @@ title: ""
 author: "Abraham Porschet"
 date: "2024-01-15"
 categories: [code, analysis]
-image: "image.jpeg"
+image: "gol_heatmap.png"
 ---
 
