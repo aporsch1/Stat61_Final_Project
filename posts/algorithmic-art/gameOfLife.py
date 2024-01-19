@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.express as px
 from matplotlib.colors import LogNorm
 from os import system
 
@@ -61,16 +62,14 @@ def clear():
     
     
 def create_heatmap(grid):
-    plt.imshow(grid, cmap='viridis', interpolation='nearest')
-    plt.colorbar(label='Lifetime')
-    plt.title('Game of Life Heatmap')
-    plt.show()
+    fig = px.imshow(grid)
+    fig.show()
     
 def main():
-    initial_state = initialize_grid(75)
+    initial_state = initialize_grid(50)
     heat_grid = initial_state.copy()
     next_state = initial_state
-    for i in range(15000):
+    for i in range(1500):
         next_state = play_gol(next_state)
         heat_grid += next_state
     create_heatmap(heat_grid)

@@ -1,8 +1,21 @@
 ---
-title: ""
+title: "Algorithm Art"
 author: "Abraham Porschet"
 date: "2024-01-15"
-categories: [code, analysis]
-image: "gol_heatmap.png"
+categories: [code]
+image: "pretty_gol.png"
 ---
 
+I love art, I've been going to museums since I was a kid, and even though I don't have much of a gift for making it the classic way, I have always been intrigued by the idea of process art and possibly trying some of my own. 
+
+As a side note, I was recently at the Albright-Knox Gallery of Art (now known as the Buffalo AKG Art Museum) and I saw this *stunning* Jackson Pollock piece. For some reason or another I had never really been fully impressed or touched by his work, but this piece really did something for me.
+
+![Painting: 'Convergence' by Jackson Pollock, Picture: Taken by me](IMG_8004.JPG)
+
+After my trip to the museum, and me reading a book called 'The Maniac' by Benjamin Labatut which talked about the first search for artifical 'life' through computer simulations of how clusters of ones and zeros changed over time and lived and died by certain rules, I had an idea of combining my interest in that idea of virtual life with process art, or what is also known as algorithm art when you use computers. 
+
+The rules I used were those of The Game of Life, as created by John Horton Conway, one of my favorite mathematicians of all time because of his creativity and passion for the field. The rules are included in my code (check the github link at the bottom). But essentially, cells come alive (turn from a zero to a one) under some conditions, stay the same under other conditions, and die under a third set of conditions. When you randomize the array of ones and zeros across a grid you can then view how certain organisms move or stay completely still and how some move and move and fizzle and die. It is entrancing. A regular trial of the game looks something like this.
+
+![](1*5BiX8kolye4QPyyexQrogA.gif)
+
+My idea, was to then keep track of how often a cell was alive or dead and then create a heatmap of the resulting matrix that keeps track of the number of turns a cell was alive or not.
