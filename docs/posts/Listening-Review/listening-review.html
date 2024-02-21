@@ -153,7 +153,21 @@ ul.task-list li input[type="checkbox"] {
 <p>The latest, small investigation I’ve made into this data is to make a heatmap of my listening across times of day against days of the week to get a more discretized view of my listening habits and I was impressed by the visibility of trends.</p>
 <p><img src="listeningHeatMap.png" class="img-fluid"></p>
 <p>I had sleeping problems for the first time in my life this year, which led to me being up at strange hours in the night and listening to music to try and fall asleep which accounts for the music being played all the way up to around 5 in the morning, however, since I get up and start studing each day at around 7:30 and had class from around 8:30 to 12:00 most days. But after that, I generally was listening to some sort of music while working on math homework and coding for my classes and then I was <em>definitely</em> listening to music while in the gym.</p>
-<p>This is all I have from my preliminary peek at my data for an hour or two, but I will add more once I spend some more time on the analysis.</p>
+<p>Once I finished exploring the ‘counting’ side of the data, I decided I wanted to know more about the <em>kind</em> of music I was listening to. I decided to iterate through each of my top 100 songs, and pull all the data Spotify could give me for each one. Once I did this, I plotted the histograms for each audio feature in order to see if my listening was particularly skewed in any way or another in ways I didn’t expect. The first thing I looked at was <em>valence</em>, which is a metric to calculate the positivity of a track, that Spotify calculates in a really secretive way, but seems to be a product of some deep learning model they trained on audio data.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="valence.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">so…it looks like I listen to sad music😃</figcaption>
+</figure>
+</div>
+<p>My listening is fairly heavily skewed toward the ‘sadder’ end of the spectrum. This is probably because however Spotify calculates valence has a fairly heavy weighting towards the tempo, volume, and other similar features, of which the music I listen to, is always on the slower, quieter, more subtle side of the spectrum. I like slowcore, shoegaze, ambient electronic, and other fairly glacial genres.</p>
+<p>The next thing I looked at, because of my hypothesis from looking at my valence scores, was the tempo of my music.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tempo.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">surprise!</figcaption>
+</figure>
+</div>
 
 
 
