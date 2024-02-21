@@ -50,3 +50,6 @@ When I saw this, I thought, hey, maybe I am more of a dancing, up-tempo, party-m
 
 So it looks like my music is actually relatively normally distributed around the middle of the spectrum, if a bit on the more danceable side and then is generally not very 'speechy' at all, but I'd expect that to be similar to the distribution for music on spotify as a whole, which makes that unsurprising.
 
+So overall, the music I like is a lot closer to average by the metrics we get through Spotify. This is interesting, because anecdotally, it feels like a lot of my music should be much slower than the average song but it does make sense that my music does have low 'valence' scores, since what people (such as myself) perceive as 'slowness' is actually the valence of the song. That being said, if you want to take a look at my top 100 songs of 2023, I'll leave them below. 
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0yCIh10gY69JPwyXD7QrUN?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
