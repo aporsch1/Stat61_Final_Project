@@ -6,9 +6,9 @@ categories: [code]
 image: "pretty_gol.png"
 ---
 
-I love art, I've been going to museums since I was a kid, and even though I don't have much of a gift for making it the classic way, I have always been intrigued by the idea of process art and possibly trying some of my own.
+I love art. I've been going to museums since I was a kid, and even though I don't have much of a gift for making it the classic way, I have always been intrigued by the idea of process art and possibly trying some of my own.
 
-As a side note, I was recently at the Albright-Knox Gallery of Art (now known as the Buffalo AKG Art Museum) and I saw this *stunning* Jackson Pollock piece. For some reason or another I had never really been fully impressed or touched by his work, but this piece really did something for me.
+As a side note, I was recently at the Albright-Knox Gallery of Art (now known as the Buffalo AKG Art Museum) and I saw this *incredible* Jackson Pollock piece. For some reason or another I had never really been fully impressed or touched by his work, but this piece really did something for me.
 
 ![Painting: 'Convergence' by Jackson Pollock, Picture: Taken by me](IMG_8004.JPG)
 
