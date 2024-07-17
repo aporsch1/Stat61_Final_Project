@@ -1,0 +1,39 @@
+---
+title: "Misinformation Detection"
+author: "Abraham Porschet"
+date: "2024-07-16"
+categories: [code]
+#image: ""
+---
+
+This last spring semester I took 'Security and Privacy' offered by Vasanta Chaganti (a wonderful professor). We covered buffer overflows, SQL injections, XSS and CSRF attacks and many other different aspects of computer security. 
+
+One of the fundamental problems with computer security, though, is that the biggest problem with securing information and hardware is not increasingly complicated hacks that penetrate seemingly perfect cryptographic schemes—-it's users not being careful. For example, people have worried a lot about the security of voting machines--rightfully so--but it's just as much a problem to defend social media and other forms of media propagation from general misinformation and more malicious disinformation attacks. It's irrelevant how secure the ballots are if people are being manipulated to vote differently than they otherwise might. 
+
+When thinking about these alternate security concerns, while my classmates were working on hacking old versions of Windows or trying to create keyloggers, I decided to work on misinformation detection using some natural language processing techniques on a corpus of different news articles with my friend Rushil.
+
+We began our project using the 'WELFake' dataset, which combines articles from Kaggle, McIntire, Reuters, and BuzzFeed Politics and includes over 72 thousand articles. The data is structured with a unique ID, a boolean value for the truthfulness, the title of the article, and the text of the article. My first action was to create another column in the table to combine the titles to the articles, just so there was one main column that included all of the possible information about the article for the training data. 
+
+Then, we split off the labels for testing, and used scikit-learns CountVectorizer function (which is great, by the way). This essentially creates a table of all of the words seen throughout every single article, and then counts the number of times those words appear in each article. The function also removes all stop words while it goes through the count vectorization process which saves time and effort which is really nice. 
+
+Our first thought was to use a support vector machine, SVMs are great for dealing with vectors! But then, I realized that we could just use a random forest which will train faster (especially for a dataset the size of WELFake) and will have comparable accuracy, if not better. 
+
+When dealing with a random forest, there aren't too many important things to think about when actually implementing. You just need to choose your splitting criterion between information entropy, Gini impurity, etc. and the number of trees. I decided to go with the default (gini) and then looped through between 10 and 200 trees to see which forest was best at predicting fake news. 
+
+With 75 trees in our forest we had *94%* accuracy! This was much better than we expected, but we still had to make a confusion matrix to look at how well we were classifying fake news vs real news. 
+
+![](conf_mat1.png)
+
+The confusion matrix above shows that we seem to be doing a pretty balanced job. However, scikit-learn has a default attribute of its random forest objects that lets you see the most important features for prediction, and when we listed the most useful features we created the following plot.
+
+![](useful_features.png)
+
+This plot, while *mostly* useless--showing that a lot of really small, stupid words did *not* get erased using CountVectorizer--shows that Reuters is listed as the most useful word. This is unsurprising because Reuters is a news organization that is known for being extremely reliable! So this word existing in the data almost made it too easy to classify. Now, this does teach an important lesson. Your news will be more reliable if you get it from sources that are known for being reliable and if you are reading news elsewhere, if they reference an outlet--like Reuters--that you know is reliable, than you are in a good place a lot of the time. 
+
+:::{layout-nrow=1}
+![](common_true.png)
+
+![](common_fake.png)
+:::
+The following plots show the most common words in both real news and fake news articles. This also illustrates a danger in looking for singular words or topics to try and find the truthfulness of news. The truth about news is that everyone is telling the same stories about the same events! The only difference is how different outlets or people spin the stories and events toward their points of view and if they do it in a malicious way. When this data was being collected, Donald Trump was president...of course Donald Trump's will be one of the most commonly referenced words in both real and fake news. He is the biggest figure in the western world, so both well-meaning and malicious people will be discussing him and things he is doing. The same logic applies to all sorts of prominent people and topics.
+
