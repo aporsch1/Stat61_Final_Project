@@ -3,7 +3,7 @@ title: "Misinformation Detection"
 author: "Abraham Porschet"
 date: "2024-07-16"
 categories: [code]
-#image: ""
+image: "cover_pic.jpg"
 ---
 
 This last spring semester I took 'Security and Privacy' offered by Vasanta Chaganti (a wonderful professor). We covered buffer overflows, SQL injections, XSS and CSRF attacks and many other different aspects of computer security. 
@@ -37,3 +37,4 @@ This plot, while *mostly* useless--showing that a lot of really small, stupid wo
 :::
 The following plots show the most common words in both real news and fake news articles. This also illustrates a danger in looking for singular words or topics to try and find the truthfulness of news. The truth about news is that everyone is telling the same stories about the same events! The only difference is how different outlets or people spin the stories and events toward their points of view and if they do it in a malicious way. When this data was being collected, Donald Trump was president...of course Donald Trump's will be one of the most commonly referenced words in both real and fake news. He is the biggest figure in the western world, so both well-meaning and malicious people will be discussing him and things he is doing. The same logic applies to all sorts of prominent people and topics.
 
+Although we realized that finding categories that are prominent in both real and fake news wasn't the most helpful route for humans to differentiate, because everything looks so similar, I decided I wanted to try using *Latent Dirichlet Allocation*, a natural language processing algorithm that helps define important *topics* in a text. It defines these topics by a cluster of words that belong together in some way. This uses an algorithm not entirely dissimilar to expectation maximization using the dirichlet distribution and bayesian probability. 
